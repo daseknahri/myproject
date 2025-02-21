@@ -1,0 +1,211 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="مجوهرات ذهبية فاخرة - تصميم يدوي حصري">
+    <meta name="keywords" content="مجوهرات, ذهب, قلادة, ماس, مجوهرات فاخرة">
+    <meta name="author" content="اسم علامتك التجارية">
+    <title>مجوهرات ذهبية فاخرة - اطلب الآن</title>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap" rel="stylesheet">
+
+    <!-- Slick Slider CSS -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel/slick/slick.css"/>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel/slick/slick-theme.css"/>
+
+    <style>
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background-color: #faf7f2;
+            margin: 0;
+            padding: 0;
+            color: #333;
+            text-align: center;
+        }
+
+        section {
+            padding: 2rem 1rem;
+        }
+
+        h1, h2 {
+            color: #b8860b;
+            margin-bottom: 0.5rem;
+        }
+
+        .image-slider {
+            width: 80%;
+            margin: 20px auto;
+        }
+
+        .image-slider img {
+            width: 100%;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .thumbnail-slider {
+            margin-top: 20px;
+        }
+
+        .thumbnail-slider img {
+            width: 100px;
+            height: auto;
+            margin: 0 10px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: transform 0.3s;
+        }
+
+        .thumbnail-slider img:hover {
+            transform: scale(1.1);
+        }
+
+        /* Order Form */
+        .order-form {
+            background: white;
+            padding: 2rem;
+            margin: 2rem auto;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+        }
+
+        .order-form input {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .order-form button {
+            background: linear-gradient(90deg, #b8860b, #d4af37);
+            color: white;
+            padding: 14px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s ease-in-out;
+        }
+
+        .order-form button:hover {
+            background: linear-gradient(90deg, #d4af37, #b8860b);
+        }
+
+        footer {
+            background: #f4f4f4;
+            padding: 1rem;
+            text-align: center;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        @media (max-width: 600px) {
+            .image-slider img {
+                height: 250px;
+            }
+
+            .thumbnail-slider img {
+                width: 80px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <section>
+        <h1>مجوهرات ذهبية فاخرة</h1>
+        <p>قطع مصنوعة يدويًا بأناقة لا مثيل لها.</p>
+    </section>
+
+    <!-- Main Image Slider -->
+    <div class="image-slider">
+        <div><img src="{% static '1.png' %}" alt="مجوهرات 1"></div>
+        <div><img src="{% static '2.png' %}" alt="مجوهرات 2"></div>
+        <div><img src="{% static '3.png' %}" alt="مجوهرات 3"></div>
+    </div>
+
+    <!-- Thumbnail Slider (Below the Main Image Slider) -->
+    <div class="thumbnail-slider">
+        <img src="{% static '1.png' %}" alt="مجوهرات 1" onclick="showImage(0)">
+        <img src="{% static '2.png' %}" alt="مجوهرات 2" onclick="showImage(1)">
+        <img src="{% static '3.png' %}" alt="مجوهرات 3" onclick="showImage(2)">
+    </div>
+
+    <!-- Product Description -->
+    <section>
+        <h2>لماذا تختار مجوهراتنا؟</h2>
+        <p>مصنوعة من <strong>ذهب عيار 24 قيراط وماسات فاخرة</strong> تمنحك مظهرًا راقيًا وأنيقًا.</p>
+        <ul>
+            <li>جودة ذهب وماس أصلية</li>
+            <li>تصميم فاخر وأنيق</li>
+            <li>مثالية للهدايا والمناسبات الخاصة</li>
+        </ul>
+    </section>
+
+    <!-- Order Form -->
+    <section>
+        <div class="order-form">
+            <h2>اطلب الآن</h2>
+            <form id="orderForm" method="POST" action="{% url 'register' %}">
+                {% csrf_token %}
+                <input type="text" id="name" name="name" placeholder="الاسم الكامل" required>
+                <input type="text" id="city" name="city" placeholder="المدينة" required>
+                <input type="tel" id="phone" name="phone" placeholder="رقم الهاتف" required>
+
+                <!-- WhatsApp Button -->
+                <button type="button" onclick="sendToWhatsApp()">تواصل عبر واتساب</button>
+
+                <!-- Register Button -->
+                <button type="submit">تسجيل المعلومات</button>
+            </form>
+        </div>
+    </section>
+
+    <footer>&copy; 2024 علامتك التجارية. جميع الحقوق محفوظة.</footer>
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Slick Slider JS -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/slick-carousel/slick/slick.min.js"></script>
+
+    <script>
+        $(document).ready(function(){
+            // Initialize the main image slider
+            $('.image-slider').slick({
+                rtl: true,  // Enable RTL for Arabic support
+                dots: true,
+                autoplay: false,
+                autoplaySpeed: 3000,
+                arrows: false,
+            });
+
+            // Function to show the selected image when a thumbnail is clicked
+            window.showImage = function(index) {
+                $('.image-slider').slick('slickGoTo', index); // Go to the selected slide
+            };
+
+            // Form submission to WhatsApp
+            function sendToWhatsApp() {
+                const name = document.getElementById("name").value;
+                const city = document.getElementById("city").value;
+                const phone = document.getElementById("phone").value;
+
+                if (name && city && phone) {  // Basic validation
+                    const message = `مرحبًا، أود طلب مجوهرات:\nالاسم: ${name}\nالمدينة: ${city}\nرقم الهاتف: ${phone}`;
+                    const whatsappURL = `https://wa.me/0618201196?text=${encodeURIComponent(message)}`;
+
+                    window.open(whatsappURL, "_blank");
+                } else {
+                    alert("يرجى ملء جميع الحقول قبل المتابعة.");
+                }
+            }
+        });
+    </script>
+
+</body>
+</html>

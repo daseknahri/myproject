@@ -1,0 +1,170 @@
+{% extends "admin/base_site.html" %}
+{% load i18n %}
+{% block content %}
+{{ block.super }}
+<div class="dashboard-container py-8 px-6">
+    <h1 class="text-3xl font-semibold mb-6 text-gray-800">{% trans "Admin Dashboard" %}</h1>
+
+    <!-- Number of Reservations and Available Cars -->
+    <section class="dashboard-section mb-8 bg-white p-6 rounded-lg shadow-lg">
+        <div class="flex {% if lang_code == 'ar' %}space-x-reverse space-x-4{% else %}space-x-4{% endif %}">
+            <div class="summary-box bg-blue-100 p-4 rounded-lg shadow">
+                <h3 class="text-lg font-semibold text-blue-600">{% trans "Total Reservations" %}</h3>
+                <p class="text-2xl font-bold text-gray-800">{{ total_reservations }}</p>
+            </div>
+            <div class="summary-box bg-green-100 p-4 rounded-lg shadow">
+                <h3 class="text-lg font-semibold text-green-600">{% trans "Available Cars" %}</h3>
+                <p class="text-2xl font-bold text-gray-800">{{ available_cars }}</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Rental Days by Car per Month -->
+    <section class="dashboard-section mb-8 bg-white p-6 rounded-lg shadow-lg">
+        <h2 class="text-xl font-medium mb-4 text-gray-700">{% trans "Rental Days by Car per Month" %}</h2>
+        <table class="financial-table w-full border-collapse table-auto">
+            <thead>
+                <tr class="bg-gray-100">
+                    <th class="px-4 py-2 border">{% trans "Car" %}</th>
+                    <th class="px-4 py-2 border">{% trans "Number Of Rental Days" %}</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for car_data in car_rental_days_data %}
+                    <tr>
+                        <td class="px-4 py-2 border text-gray-700">{{ car_data.car.model }}</td>
+                        <td class="px-4 py-2 border text-gray-700">
+                            <button class="btn btn-primary bg-blue-500 text-white p-2 rounded" onclick="toggleRentalDays('rental-days-{{ car_data.car.id }}')">
+                                {% trans "View Rental Days" %}
+                            </button>
+                        </td>
+                    </tr>
+
+                    <!-- Hidden section to display rental days for the car -->
+                    <tr id="rental-days-{{ car_data.car.id }}" class="hidden">
+                        <td colspan="2" class="px-4 py-2 border">
+                            <table class="w-full border-collapse table-auto">
+                                <thead>
+                                    <tr class="bg-gray-100">
+                                        <th class="px-4 py-2 border">{% trans "Month" %}</th>
+                                        <th class="px-4 py-2 border">{% trans "Rental Days" %}</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for month, days in car_data.rental_days_by_month.items %}
+                                        <tr>
+                                            <td class="px-4 py-2 border text-gray-700">{{ month|date:"F Y" }}</td>
+                                            <td class="px-4 py-2 border text-gray-800">{{ days }}</td>
+                                        </tr>
+                                    {% empty %}
+                                        <tr>
+                                            <td colspan="2" class="px-4 py-2 border text-center text-gray-500">{% trans "No rental data available." %}</td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="2" class="px-4 py-2 border text-center text-gray-500">{% trans "No car data available." %}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </section>
+
+
+    <!-- Monthly Financial Summary Table -->
+    <section class="dashboard-section mb-8 bg-white p-6 rounded-lg shadow-lg">
+        <h2 class="text-xl font-medium mb-4 text-gray-700">{% trans "Monthly Financial Summary" %}</h2>
+        <table class="financial-table w-full border-collapse table-auto">
+            <thead>
+                <tr class="bg-gray-100">
+                    <th class="px-4 py-2 border">{% trans "Month" %}</th>
+                    <th class="px-4 py-2 border">{% trans "Total Revenue" %}</th>
+                    <th class="px-4 py-2 border">{% trans "Total Expenditure" %}</th>
+                    <th class="px-4 py-2 border">{% trans "Profit" %}</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in monthly_financial_data %}
+                <tr>
+                    <td class="px-4 py-2 border text-gray-700">{{ item.month|date:"F Y" }}</td>
+                    <td class="px-4 py-2 border text-gray-800">{{ item.revenue|floatformat:2 }} MAD</td>
+                    <td class="px-4 py-2 border text-gray-800">{{ item.expenditure|floatformat:2 }} MAD</td>
+                    <td class="px-4 py-2 border text-center {% if item.profit < 0 %}text-red-600{% else %}text-green-600{% endif %}">
+                        {{ item.profit|floatformat:2 }} MAD
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="4" class="px-4 py-2 border text-center text-gray-500">{% trans "No financial data available." %}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </section>
+
+
+    <!-- Profit and Expenses by Car -->
+    <section class="dashboard-section mb-8 bg-white p-6 rounded-lg shadow-lg">
+        <h2 class="text-xl font-medium mb-4 text-gray-700">{% trans "Profit and Expenses by Car" %}</h2>
+        <table class="financial-table w-full border-collapse table-auto">
+            <thead>
+                <tr class="bg-gray-100">
+                    <th class="px-4 py-2 border">{% trans "Car" %}</th>
+                    <th class="px-4 py-2 border">{% trans "Total Revenue" %}</th>
+                    <th class="px-4 py-2 border">{% trans "Total Expense" %}</th>
+                    <th class="px-4 py-2 border">{% trans "Profit" %}</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in car_profit_data %}
+                <tr>
+                    <td class="px-4 py-2 border text-gray-700">{{ item.car.model }}</td>
+                    <td class="px-4 py-2 border text-gray-800">{{ item.total_revenue|floatformat:2 }} MAD</td>
+                    <td class="px-4 py-2 border text-gray-800">{{ item.total_expense|floatformat:2 }} MAD</td>
+                    <td class="px-4 py-2 border text-center {% if item.profit < 0 %}text-red-600{% else %}text-green-600{% endif %}">
+                        {{ item.profit|floatformat:2 }} MAD
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="4" class="px-4 py-2 border text-center text-gray-500">{% trans "No car data available." %}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </section>
+
+    <!-- Clients with Balance Due -->
+    <section class="dashboard-section mb-8 bg-white p-6 rounded-lg shadow-lg">
+        <h2 class="text-xl font-medium mb-4 text-gray-700">{% trans "Clients with Balance Due" %}</h2>
+        <table class="financial-table w-full border-collapse table-auto">
+            <thead>
+                <tr class="bg-gray-100">
+                    <th class="px-4 py-2 border">{% trans "Client" %}</th>
+                    <th class="px-4 py-2 border">{% trans "Total Due" %}</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for client in clients_with_due %}
+                <tr>
+                    <td class="px-4 py-2 border text-gray-700">{{ client.name }}</td>
+                    <td class="px-4 py-2 border text-red-600">
+                        {{ client.total_amount_due|floatformat:2 }} MAD
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="2" class="px-4 py-2 border text-center text-gray-500">{% trans "No clients with due amounts." %}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </section>
+
+</div>
+
+{% endblock %}

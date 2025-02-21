@@ -1,0 +1,9 @@
+html[lang="en"] body {
+    background-color: whitesmoke !important;  /* Test with a red background for Arabic */
+}
+html[lang="fr"] body {
+    background-color: whitesmoke !important;  /* Test with a red background for Arabic */
+}
+html[lang="ar"] body {
+    background-color: whitesmoke !important;  /* Test with a red background for Arabic */
+}
