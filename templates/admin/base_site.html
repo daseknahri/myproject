@@ -3,6 +3,8 @@
 {% load i18n %}
 {% block extrahead %}
 {{ block.super }}
+<script src="{% static 'mobile.js' %}"></script>
+<link rel="stylesheet" href="{% static 'style.css' %}">
 {% endblock %}
 {% block extrastyle %}
     <!-- Tailwind CSS -->

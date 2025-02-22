@@ -10,6 +10,9 @@ from .models import Car, Reservation, Client, Payment, BusinessExpenditure, CarE
 from django.http import JsonResponse
 from django.utils.translation import get_language
 from collections import defaultdict
+from django.utils.translation import gettext as _
+from django.utils.formats import date_format
+
 
 
 def thank_you(request):
@@ -37,56 +40,34 @@ def home(request):
 
 @staff_member_required
 def admin_dashboard(request):
-    # Get current date for reusable calculations
     current_date = now().date()
 
-    # Monthly revenue and expenditure data
-    
-
-# Initialize dictionary to store revenue per month
+    # --- Financial Data Calculation ---
     monthly_revenue_data = defaultdict(float)
-
-# Iterate through reservations
     for reservation in Reservation.objects.all():
         start_date = reservation.start_date
         end_date = reservation.end_date
         daily_rate = reservation.actual_daily_rate or reservation.car.daily_rate
 
-        # Split rental days across months
         while start_date < end_date:
             month = start_date.replace(day=1)
-
-            # Determine the last day of the current month
             last_day_of_month = (month + timedelta(days=32)).replace(day=1) - timedelta(days=1)
-
-            # Calculate rental days in this month
             days_in_month = (min(end_date, last_day_of_month) - start_date).days + 1
             monthly_revenue_data[month] += days_in_month * float(daily_rate)
-
-            # Move to the next month
             start_date = last_day_of_month + timedelta(days=1)
 
-    # Convert to list format for sorting
     monthly_revenue_data = [{'month': month, 'total_revenue': revenue} for month, revenue in monthly_revenue_data.items()]
     monthly_revenue_data.sort(key=lambda x: x['month'])
 
-    # Calculate expenditures (keeping your original logic)
-    monthly_car_expenditure_data = CarExpenditure.objects.annotate(month=TruncMonth('date')) \
-        .values('month') \
-        .annotate(total_expenditure=Sum('cost'))
+    monthly_car_expenditure_data = CarExpenditure.objects.annotate(month=TruncMonth('date')).values('month').annotate(total_expenditure=Sum('cost'))
+    monthly_business_expenditure_data = BusinessExpenditure.objects.annotate(month=TruncMonth('date')).values('month').annotate(total_expenditure=Sum('amount'))
 
-    monthly_business_expenditure_data = BusinessExpenditure.objects.annotate(month=TruncMonth('date')) \
-        .values('month') \
-        .annotate(total_expenditure=Sum('amount'))
-
-    # Merge expenditures
     monthly_expenditure_data = defaultdict(float)
     for item in monthly_car_expenditure_data:
-        monthly_expenditure_data[item['month']] += item['total_expenditure']
+        monthly_expenditure_data[item['month']] += float(item['total_expenditure'])
     for item in monthly_business_expenditure_data:
-        monthly_expenditure_data[item['month']] += item['total_expenditure']
+        monthly_expenditure_data[item['month']] += float(item['total_expenditure'])
 
-    # Merge revenue and expenditure into financial data
     monthly_financial_data = [
         {
             'month': revenue_item['month'],
@@ -96,31 +77,21 @@ def admin_dashboard(request):
         }
         for revenue_item in monthly_revenue_data
     ]
-
-    # Sort by month
     monthly_financial_data.sort(key=lambda x: x['month'])
 
-    # Number of reservations and available cars
+    # --- Number of Reservations & Available Cars ---
     total_reservations = Reservation.objects.count()
     available_cars = Car.objects.filter(is_available=True).count()
 
-    # Total profit and expenses by car
+    # --- Profit & Expenses by Car ---
     car_profit_data = []
-
     for car in Car.objects.all():
-        # Calculate total revenue using reservation days * actual daily rate
         total_revenue = sum(
             reservation.rental_days * (reservation.actual_daily_rate or car.daily_rate)
             for reservation in car.reservations.all()
         )
-
-        # Calculate total expenditure for the car
         total_expense = CarExpenditure.objects.filter(car=car).aggregate(Sum('cost'))['cost__sum'] or 0
-
-        # Calculate profit
         profit = total_revenue - total_expense
-
-        # Append data
         car_profit_data.append({
             'car': car,
             'total_revenue': total_revenue,
@@ -128,9 +99,43 @@ def admin_dashboard(request):
             'profit': profit,
         })
 
-    # Clients with balance due
+    # --- Clients with Balance Due ---
     clients_with_due = Client.objects.filter(total_amount_due__gt=0)
 
+    # 🛠️ **STRUCTURE TABLE DATA FOR UNFOLD**
+    table_clients_with_due = {
+        "headers": [_("Client"), _("Total Due")],
+        "rows": [
+            [client.name, f"{client.total_amount_due:.2f} MAD"]
+            for client in clients_with_due
+        ]
+    }
+
+    table_financial_data = {
+        "headers": [_("Month"), _("Total Revenue"), _("Total Expenditure"), _("Profit")],
+        "rows": [
+            [
+                item["month"].strftime("%B %Y"),
+                f"{item['revenue']:.2f} MAD",
+                f"{item['expenditure']:.2f} MAD",
+                f"{item['profit']:.2f} MAD"
+            ]
+            for item in monthly_financial_data
+        ]
+    }
+
+    table_car_profit_data = {
+        "headers": [_("Car"), _("Total Revenue"), _("Total Expense"), _("Profit")],
+        "rows": [
+            [
+                item["car"].model,
+                f"{item['total_revenue']:.2f} MAD",
+                f"{item['total_expense']:.2f} MAD",
+                f"{item['profit']:.2f} MAD"
+            ]
+            for item in car_profit_data
+        ]
+    }
     # Car rental days for each month
     car_rental_days_data = []
     for car in Car.objects.all():
@@ -158,16 +163,35 @@ def admin_dashboard(request):
             'car': car,
             'rental_days_by_month': rental_days_by_month,
         })
+    all_months = set()
 
-    context = {
-        'monthly_financial_data': monthly_financial_data,
-        'total_reservations': total_reservations,
-        'available_cars': available_cars,
-        'car_profit_data': car_profit_data,
-        'clients_with_due': clients_with_due,
-        'car_rental_days_data': car_rental_days_data,
-        'lang_code': get_language()
+    for car_data in car_rental_days_data:
+        all_months.update(car_data["rental_days_by_month"].keys())
+
+    # 🟢 Sort months for correct display
+    all_months = sorted(all_months)
+    translated_months = [date_format(month, "F Y") for month in all_months]  
+
+    # 🟢 Structure data for Unfold Table
+    table_car_rental_days = {
+        "headers": [_("Car")] + translated_months,  # Car Name + Months
+        "rows": [
+            [car_data["car"].model] + [str(car_data["rental_days_by_month"].get(month, 0)) for month in all_months]
+            for car_data in car_rental_days_data
+        ]
     }
+
+    # --- Pass Data to Context ---
+    context = {
+        "table_car_rental_days" : table_car_rental_days,
+        "table_clients_with_due": table_clients_with_due,
+        "table_financial_data": table_financial_data,
+        "table_car_profit_data": table_car_profit_data,
+        "total_reservations": total_reservations,
+        "available_cars": available_cars,
+        "lang_code": get_language(),
+    }
+
     return context
 
 

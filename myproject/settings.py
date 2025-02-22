@@ -63,6 +63,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rent',
 ]
+DATA_UPLOAD_MAX_MEMORY_SIZE = 52428800  # 50MB in bytes
 
 MIDDLEWARE = [
     'django.middleware.locale.LocaleMiddleware',

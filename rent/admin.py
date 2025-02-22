@@ -24,6 +24,7 @@ from unfold.admin import ModelAdmin
 
 
 
+
 @staff_member_required
 def revenue_report(request):
     """
@@ -49,7 +50,10 @@ class DriverAdminForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        #self.fields['date_of_birth'].widget = forms.DateInput(attrs={'type': 'date'})
+        self.fields['date_of_birth'].widget = forms.DateInput(attrs={
+            'type': 'date',
+            'class': 'unfold-datepicker'  # Add a custom class for easier styling and JS interaction
+        })
 
         self.fields['identity_card_front'].widget.attrs.update({'capture': 'camera', 'accept': 'image/*'})
         self.fields['identity_card_back'].widget.attrs.update({'capture': 'camera', 'accept': 'image/*'})
@@ -66,7 +70,11 @@ class ClientAdminForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
 
         #self.fields['date_of_birth'].widget = forms.DateInput(attrs={'type': 'date'})
-
+        # Use UnfoldAdminDateInput widget for the date_of_birth field to provide a better date picker
+        self.fields['date_of_birth'].widget = forms.DateInput(attrs={
+            'type': 'date',
+            'class': 'unfold-datepicker'  # Add a custom class for easier styling and JS interaction
+        })
         self.fields['identity_card_front'].widget.attrs.update({'capture': 'camera', 'accept': 'image/*'})
         self.fields['identity_card_back'].widget.attrs.update({'capture': 'camera', 'accept': 'image/*'})
         self.fields['driver_license_front'].widget.attrs.update({'capture': 'camera', 'accept': 'image/*'})

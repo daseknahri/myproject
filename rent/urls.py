@@ -4,7 +4,7 @@ from .admin import revenue_report
 from . import views
 
 urlpatterns = [
-    path('', views.register, name='register'),
+    path('', views.home, name='register'),
     path('thank-you/', views.thank_you, name='thank_you'),
     #path('', views.home, name='home'),
     #path('jewlery/', views.test, name='home'),
