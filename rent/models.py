@@ -1,6 +1,8 @@
 
 from datetime import date, time, timedelta
 from django.utils.timezone import now, localtime
+from imagekit.models import ProcessedImageField
+from imagekit.processors import ResizeToFill, ResizeToFit
 
 from django.db import models
 from django.forms import ValidationError
@@ -30,24 +32,40 @@ class Driver(models.Model):
     )
     driver_license_number = models.CharField(
         _("Driver's License Number"), 
-        max_length=20, 
+        max_length=20,
         unique=True, 
         validators=[RegexValidator(r'^[A-Za-z0-9-]+$', _("Enter a valid driver’s license number."))]
     )
-    identity_card_front = models.ImageField(
-        _("Identity Card Front"), upload_to='drivers/identity_cards/fronts/', blank=True, null=True
+    identity_card_front = ProcessedImageField(
+        verbose_name=_("Identity Card Front"), 
+        upload_to='drivers/identity_cards/fronts/', blank=True, null=True,
+        processors=[ResizeToFit(800, 800)],
+        format='JPEG',
+        options={'quality': 70}
     )
-    identity_card_back = models.ImageField(
-        _("Identity Card Back"), upload_to='drivers/identity_cards/backs/', blank=True, null=True
+    identity_card_back = ProcessedImageField(
+        verbose_name=_("Identity Card Back"), upload_to='drivers/identity_cards/backs/', blank=True, null=True,
+        processors=[ResizeToFit(800, 800)],
+        format='JPEG',
+        options={'quality': 70}
     )
-    driver_license_front = models.ImageField(
-        _("Driver License Front"), upload_to='drivers/driver_licenses/fronts/', blank=True, null=True
+    driver_license_front = ProcessedImageField(
+        verbose_name=_("Driver License Front"), upload_to='drivers/driver_licenses/fronts/', blank=True, null=True,
+        processors=[ResizeToFit(800, 800)],
+        format='JPEG',
+        options={'quality': 70}
     )
-    driver_license_back = models.ImageField(
-        _("Driver License Back"), upload_to='drivers/driver_licenses/backs/', blank=True, null=True
+    driver_license_back = ProcessedImageField(
+        verbose_name=_("Driver License Back"), upload_to='drivers/driver_licenses/backs/', blank=True, null=True,
+        processors=[ResizeToFit(800, 800)],
+        format='JPEG',
+        options={'quality': 70}
     )
-    passport_image = models.ImageField(
-        _("Passport Image"), upload_to='drivers/passports/', blank=True, null=True
+    passport_image = ProcessedImageField(
+        verbose_name=_("Passport Image"), upload_to='drivers/passports/', blank=True, null=True,
+        processors=[ResizeToFit(800, 800)],
+        format='JPEG',
+        options={'quality': 70}
     )
     def age(self):
         """Calculate the client's age based on their date of birth."""
@@ -80,7 +98,12 @@ class Car(models.Model):
     brand = models.CharField(_("Brand"), max_length=20)
     model = models.CharField(_('Model'), max_length=20)
     plate_number = models.CharField(_('Registration Plate') , max_length=20, unique=True)
-    image = models.ImageField(_('Image'), upload_to='cars/')
+    image = ProcessedImageField(
+        verbose_name=_('Image'), upload_to='cars/',                                   
+        processors=[ResizeToFit(800, 800)],
+        format='JPEG',
+        options={'quality': 70}
+    )
     year = models.PositiveIntegerField(_('Year') ,default=2024)
     gearbox = models.CharField(_('Transmission'),max_length=20, choices=GEARBOX_CHOICES, default='manual')
     fuel_type = models.CharField(_('Fuel Type'), max_length=20, choices=FUEL_CHOICES, default='Diesel')
@@ -135,32 +158,47 @@ class Client(models.Model):
         validators=[RegexValidator(r'^[A-Za-z0-9-]+$', _("Enter a valid ID card number."))]
     )
     driver_license_number = models.CharField(
-        _("Driver's License Number"),
+        verbose_name=_("Driver's License Number"),
         max_length=20, 
         unique=True,
         validators=[RegexValidator(r'^[A-Za-z0-9-]+$', _("Enter a valid driver’s license number."))]
     )
     total_amount_paid = models.DecimalField(
-        _("Total Amount Paid"), max_digits=12, decimal_places=2, default=0.00
+        verbose_name=_("Total Amount Paid"), max_digits=12, decimal_places=2, default=0.00
     )
     total_amount_due = models.DecimalField(
-        _("Total Amount Due"), max_digits=12, decimal_places=2, default=0.00
+        verbose_name=_("Total Amount Due"), max_digits=12, decimal_places=2, default=0.00
     )
     
-    identity_card_front = models.ImageField(
-        _("Identity Card Front"), upload_to='clients/identity_cards/fronts/', blank=True, null=True
+    identity_card_front = ProcessedImageField(
+        verbose_name=_("Identity Card Front"), upload_to='clients/identity_cards/fronts/', blank=True, null=True,
+        processors=[ResizeToFit(800, 800)],
+        format='JPEG',
+        options={'quality': 70}
     )
-    identity_card_back = models.ImageField(
-        _("Identity Card Back"), upload_to='clients/identity_cards/backs/', blank=True, null=True
+    identity_card_back = ProcessedImageField(
+        verbose_name=_("Identity Card Back"), upload_to='clients/identity_cards/backs/', blank=True, null=True,
+        processors=[ResizeToFit(800, 800)],
+        format='JPEG',
+        options={'quality': 70}
     )
-    driver_license_front = models.ImageField(
-        _("Driver License Front"), upload_to='clients/driver_licenses/fronts/', blank=True, null=True
+    driver_license_front = ProcessedImageField(
+        verbose_name=_("Driver License Front"), upload_to='clients/driver_licenses/fronts/', blank=True, null=True,
+        processors=[ResizeToFit(800, 800)],
+        format='JPEG',
+        options={'quality': 70}
     )
-    driver_license_back = models.ImageField(
-        _("Driver License Back"), upload_to='clients/driver_licenses/backs/', blank=True, null=True
+    driver_license_back = ProcessedImageField(
+        verbose_name=_("Driver License Back"), upload_to='clients/driver_licenses/backs/', blank=True, null=True,
+        processors=[ResizeToFit(800, 800)],
+        format='JPEG',
+        options={'quality': 70}
     )
-    passport_image = models.ImageField(
-        _("Passport Image"), upload_to='clients/passports/', blank=True, null=True
+    passport_image = ProcessedImageField(
+        verbose_name=_("Passport Image"), upload_to='clients/passports/', blank=True, null=True,
+        processors=[ResizeToFit(800, 800)],
+        format='JPEG',
+        options={'quality': 70}
     )
 
     rating = models.PositiveSmallIntegerField(
