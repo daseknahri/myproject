@@ -2,7 +2,7 @@
 from datetime import date, time, timedelta
 from django.utils.timezone import now, localtime
 from imagekit.models import ProcessedImageField
-from imagekit.processors import ResizeToFill, ResizeToFit
+from imagekit.processors import ResizeToFit
 
 from django.db import models
 from django.forms import ValidationError
