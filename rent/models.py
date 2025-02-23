@@ -246,9 +246,6 @@ class City(models.Model):
         verbose_name_plural = _("City")
     def __str__(self):
         return self.name
-def get_current_time():
-    return localtime(now()).time()
-
 class Reservation(models.Model):
     STATUS_CHOICES = [
         ("pending", _("Pending")), 
@@ -266,8 +263,8 @@ class Reservation(models.Model):
     )  # Multiple drivers allowed
     start_date = models.DateField(_("Start Date"))
     end_date = models.DateField(_("End Date"))
-    pickup_time = models.TimeField(_("Pickup Time"), default=get_current_time())
-    dropoff_time = models.TimeField(_("Dropoff Time"), default=get_current_time())
+    pickup_time = models.TimeField(_("Pickup Time"), default=now)
+    dropoff_time = models.TimeField(_("Dropoff Time"), default=now)
     pickup_adresse = models.ForeignKey("City", on_delete=models.CASCADE, related_name="pickup_reservations", verbose_name=_("Pick up Adresse"), null=True,blank=True)
     dropoff_adresse = models.ForeignKey("City", on_delete=models.CASCADE, related_name="dropoff_reservations", verbose_name=_("Drop off Adresse"), null=True,blank=True)
     status = models.CharField(_("Status"), max_length=20, choices=STATUS_CHOICES, default="pending")
