@@ -1,3 +1,30 @@
+
+html[dir="rtl"] .relative > .absolute {
+    right: auto;
+    left: 0;
+}
+
+html[dir="rtl"] .relative > .absolute > * {
+    text-align: right;
+}
+
+html[dir="rtl"] .vDateField {
+    text-align: right; /* Align input text to the right */
+    direction: rtl; /* Ensure input field supports RTL text */
+}
+
+html[dir="rtl"] .datetimeshortcuts {
+    display: flex;
+    flex-direction: row-reverse; /* Reverses the order of the links */
+    justify-content: flex-start; /* Aligns the items to the left in RTL */
+    width: 101%; /* Prevents overflow */
+}
+
+html[dir="rtl"] .datetimeshortcuts a {
+    margin: 0 5px; /* Adds some space between the links */
+    display: inline-block; /* Ensures the links stay inline */
+}
+
 /* Force native date picker styling to be removed completely */
 label[for="id_date_of_birth"] {
     font-weight: bold;
@@ -39,4 +66,149 @@ label[for="id_date_of_birth"] {
 /* Placeholder styling */
 .unfold-datepicker::placeholder {
     color: var(--color-base-500);  /* Placeholder color */
+}
+
+/* Apply RTL styles only to the table content */
+html[dir="rtl"] .table-rtl table {
+    direction: rtl; /* Reverse text direction for the table */
+}
+
+html[dir="rtl"] .table-rtl th,
+html[dir="rtl"] .table-rtl td {
+    text-align: right; /* Align table headers and data to the right in RTL */
+}
+
+html[dir="rtl"] .table-rtl th {
+    padding-right: 10px; /* Add padding to headers to avoid squeezing */
+}
+
+html[dir="rtl"] .table-rtl td {
+    padding-left: 10px; /* Add padding to the left of data cells */
+}
+
+/* Optional: Ensure the tables do not get too narrow in RTL */
+html[dir="rtl"] .table-rtl {
+    width: 100%; /* Make sure the table takes full width */
+    overflow-x: auto; /* Add horizontal scrolling if the table is wide */
+}
+
+html[dir="rtl"] table {
+    direction: rtl;
+}
+
+html[dir="rtl"] th,
+html[dir="rtl"] td {
+    text-align: right;
+}
+
+/* Global Dark Mode Styles */
+html.dark .dashboard-container {
+    background-color: #1e1e2e; /* Dark background */
+    color: #e0e0e0; /* Light text for readability */
+}
+
+/* Dashboard title */
+html.dark h1 {
+    color: #ffffff; /* White title for contrast */
+}
+
+/* Cards Styling */
+html.dark .dashboard-section {
+    background: #252535; /* Darker background for sections */
+    padding: 16px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.4);
+}
+
+/* Card Title */
+html.dark .dashboard-section h2 {
+    color: #ffffff;
+}
+
+/* Statistics inside Cards */
+html.dark .dashboard-section p {
+    color: #e0e0e0; /* Light text */
+}
+
+/* Tables Styling */
+html.dark .table-container {
+    background-color: #28293d; /* Dark background for tables */
+    border-radius: 8px;
+    overflow: hidden;
+    padding: 12px;
+}
+
+/* Table Headers */
+html.dark table th {
+    background-color: #3b3b58;
+    color: #ffffff;
+    border-bottom: 1px solid #4a4a6a;
+}
+
+/* Table Rows */
+html.dark table tr {
+    background-color: #2b2b40;
+}
+
+/* Alternating Row Colors */
+html.dark table tr:nth-child(even) {
+    background-color: #33334d;
+}
+
+/* Table Cells */
+html.dark table td {
+    color: #e0e0e0;
+    padding: 10px;
+}
+
+/* Hover Effect on Rows */
+html.dark table tr:hover {
+    background-color: #444465;
+}
+
+/* Buttons and Links */
+html.dark a {
+    color: #4da8da; /* Bright blue for contrast */
+}
+
+html.dark a:hover {
+    color: #78c7ff;
+    text-decoration: underline;
+}
+
+/* Fix Inputs */
+html.dark input {
+    background-color: #33334d;
+    color: #ffffff;
+    border: 1px solid #4a4a6a;
+}
+
+/* Checkbox Fix */
+html.dark input[type="checkbox"] {
+    filter: invert(1);
+}
+
+/* Ensure RTL Tables Look Proper */
+html[dir="rtl"].dark .table-container {
+    text-align: right;
+}
+
+/* Ensure Section Margins Look Clean */
+html.dark .dashboard-section + .dashboard-section {
+    margin-top: 16px;
+}
+
+
+@media (max-width: 768px) {
+    /* Ensure labels (data-label) are positioned to the right */
+    html[dir="rtl"] td::before,
+    html[dir="rtl"] th::before {
+        content: attr(data-label);
+        font-weight: bold;
+        color: #444;
+        margin-left: auto; /* Push label to the right */
+        margin-right: 8px; /* Add space between label and value */
+        text-align: right;
+        flex-shrink: 0;
+    }
 }

@@ -1,389 +1,617 @@
-
 msgid ""
 msgstr ""
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-02-23 01:52+0100\n"
+"Language: fr\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Language: fr\n"  
 
-
+#: .\myproject\settings.py:33
 msgid "English"
 msgstr "Englais"
 
+#: .\myproject\settings.py:34
 msgid "French"
 msgstr "francais"
 
+#: .\myproject\settings.py:35
 msgid "Arabic"
 msgstr "Arab"
 
-msgid "Tanger"
-msgstr "Tanger"
+#: .\myproject\settings.py:159 .\rent\admin.py:140
+msgid "TWINS T.B CAR"
+msgstr ""
 
-msgid "Brand"
-msgstr "Marque"
-
-msgid "Model"
-msgstr "Modèle"
-
-msgid "%(app)s administration"
-msgstr "Administration de %(app)s"
-
-msgid "Registration Plate"
-msgstr "Plaque d’immatriculation"
-
-msgid "Transmission"
-msgstr "Boîte de vitesses"
-
-msgid "Fuel Type"
-msgstr "Type de carburant"
-
-msgid "Image"
-msgstr "Photo"
-
-msgid "Number of passengers"
-msgstr "Nombre de passagers"
-
-msgid "Daily Rate"
-msgstr "Tarif journalier"
-
-msgid "Total Expenditure"
-msgstr "Total des dépenses"
-
-msgid "Year"
-msgstr "Année"
-
-msgid "Manual"
-msgstr "Manuelle"
-
-msgid "Automatic"
-msgstr "Automatique"
-
-msgid "Semi-Automatic"
-msgstr "Semi-Automatique"
-
-msgid "Petrol"
-msgstr "Essence"
-
-msgid "Diesel"
-msgstr "Diesel"
-
-msgid "Electric"
-msgstr "Électrique"
-
-msgid "Hybrid"
-msgstr "Hybride"
-
-msgid "Name"
-msgstr "Nom"
-
-msgid "Phone Number"
-msgstr "Numéro de téléphone"
-
-msgid "Address"
-msgstr "Adresse"
-
-msgid "Total Amount Paid"
-msgstr "Montant total payé"
-
-msgid "Total Amount Due"
-msgstr "Montant total dû"
-
-msgid "Client Rating"
-msgstr "Évaluation du client"
-
-msgid "Rating of the client (1 to 5)"
-msgstr "Évaluation du client (1 à 5)"
-
-msgid "Identity Card Image"
-msgstr "Image de la carte d'identité"
-
-msgid "Driver License Image"
-msgstr "Image du permis de conduire"
-
-msgid "Passport Image"
-msgstr "Image du passeport"
-
-msgid "Car"
-msgstr "Voiture"
-
-msgid "Client"
-msgstr "Client"
-
-msgid "Clients"
-msgstr "Clients"
-
-msgid "Drivers"
-msgstr "Chauffeurs"
-
-msgid "Start Date"
-msgstr "Date de début"
-
-msgid "End Date"
-msgstr "Date de fin"
-
-msgid "Total Cost"
-msgstr "Coût total"
-
-msgid "Payment Status"
-msgstr "Statut du paiement"
-
-msgid "Paid"
-msgstr "Payé"
-
-msgid "Partially Paid"
-msgstr "Partiellement payé"
-
-msgid "Unpaid"
-msgstr "Non payé"
-
-msgid "Total Paid"
-msgstr "Total payé"
-
-msgid "PDF Receipt"
-msgstr "Reçu PDF"
-
-
-msgid "This car is already reserved for the selected dates."
-msgstr "Cette voiture est déjà réservée pour les dates sélectionnées."
-msgid "Reservation"
-msgstr "Réservation"
-msgid "Reservations"
-msgstr "Réservations"
-msgid "Amount Paid"
-msgstr "Montant payé"
-
-msgid "Payment Date"
-msgstr "Date de paiement"
-
-msgid "Description"
-msgstr "Description"
-
-msgid "Cost"
-msgstr "Coût"
-
-msgid "Date"
-msgstr "Date"
-
-msgid "Amount"
-msgstr "Montant"
-
-
-msgid "Car Rental Management"
-msgstr "Gestion de location de voitures"
-
+#: .\myproject\settings.py:160
 msgid "Welcome to Administration"
 msgstr "Bienvenue dans l'administration"
 
-msgid "Revenue Report"
-msgstr "Rapport des revenus"
-msgid "No Image"
-msgstr "Aucune image"
+#: .\myproject\settings.py:167
+msgid "Control Panel"
+msgstr "Tablaux de Board"
 
-msgid "Identity Card"
-msgstr "Carte d'identité"
-msgid "Delete selected objects"
-msgstr "Supprimer les objets sélectionnés"
-msgid "amount"
-msgstr "Montant"
+#: .\myproject\settings.py:171 .\rent\models.py:260
+msgid "Reservations"
+msgstr "Réservations"
 
-msgid "Reservation Details"
-msgstr "Détails de la réservation"
-
-msgid "Payment Information"
-msgstr "Informations de paiement"
-
-
-
-msgid "Download Receipt"
-msgstr "Télécharger le reçu"
-
-msgid "No PDF Available"
-msgstr "Aucun PDF disponible"
-
-msgid "Payment Details"
-msgstr "Détails du paiement "
-msgid "Expenditure Information"
-msgstr "Informations sur les dépenses"
-
-msgid "Driver"
-msgstr "Chauffeur"
-
+#: .\myproject\settings.py:176 .\rent\models.py:94
 msgid "Cars"
 msgstr "Voitures"
 
+#: .\myproject\settings.py:181 .\rent\models.py:175
+msgid "Clients"
+msgstr "Clients"
 
-msgid "Car Expenditure"
-msgstr "Dépense liée à la voiture"
-
-msgid "Car Expenditures"
-msgstr "Dépenses liées aux voitures"
-
-msgid "Payment"
-msgstr "Paiement"
-
+#: .\myproject\settings.py:186 .\rent\models.py:399
 msgid "Payments"
 msgstr "Paiements"
 
-msgid "Business Expenditure"
-msgstr "Dépense de l'entreprise"
+#: .\myproject\settings.py:191 .\rent\models.py:377
+msgid "Car Expenditures"
+msgstr "Dépenses liées aux voitures"
 
+#: .\myproject\settings.py:196 .\rent\models.py:433
 msgid "Business Expenditures"
 msgstr "Dépenses de l'entreprise"
 
+#: .\rent\admin.py:131
+msgid "Delete selected objects"
+msgstr "Supprimer les objets sélectionnés"
+
+#: .\rent\admin.py:139
+msgid "Car Rental Management"
+msgstr "Gestion de location de voitures"
+
+#: .\rent\admin.py:158
+msgid "Revenue Report"
+msgstr "Rapport des revenus"
+
+#: .\rent\admin.py:167
 msgid "Dashboard"
 msgstr "Tableau de bord"
 
-msgid "Car Information"
+#: .\rent\admin.py:189
+#, fuzzy
+#| msgid "Car Information"
+msgid "Driver Information"
 msgstr "Information De Voiture"
 
-msgid "Expenditure"
-msgstr "Dépense"
-
-msgid "Client Information"
-msgstr "Informations du client"
-
+#: .\rent\admin.py:192 .\rent\admin.py:265
 msgid "documents"
 msgstr "Documents"
 
-msgid "Available"
-msgstr "Disponible"
+#: .\rent\admin.py:199 .\rent\admin.py:275
+msgid "No Image"
+msgstr "Aucune image"
 
-msgid "Yes"
-msgstr "Oui"
+#: .\rent\admin.py:200 .\rent\admin.py:276
+msgid "Identity Card"
+msgstr "Carte d'identité"
 
-msgid "No"
-msgstr "Non"
+#: .\rent\admin.py:235
+msgid "Car Information"
+msgstr "Information De Voiture"
 
-msgid "Expenditure Type"
-msgstr "Type de dépense"
+#: .\rent\admin.py:238
+msgid "Expenditure"
+msgstr "Dépense"
 
-msgid "Expenditure Types"
-msgstr "Types de dépenses"
+#: .\rent\admin.py:262
+msgid "Client Information"
+msgstr "Informations du client"
 
-msgid "Type"
-msgstr "Type"
-msgid "Date of Birth"
-msgstr "Date de naissance"
-msgid "Date of birth"
-msgstr "Date de naissance"
+#: .\rent\admin.py:268 .\rent\admin.py:381
+msgid "Payment Details"
+msgstr "Détails du paiement "
 
-msgid "Driver's License Number"
-msgstr "Numéro du permis de conduire"
+#: .\rent\admin.py:308
+msgid "Reservation Details"
+msgstr "Détails de la réservation"
 
-msgid "Identity Card Number"
-msgstr "Numéro de la carte d'identité"
-msgid "Age"
-msgstr "Âge"
-
-msgid "Pickup Time"
-msgstr "Heure de prise en charge"
-
-msgid "Dropoff Time"
-msgstr "Heure de retour"
-
-msgid "Not Available"
-msgstr "Non disponible"
-
-msgid "Pending"
-msgstr "En attente"
-
-msgid "In Progress"
-msgstr "En cours"
-
-msgid "Completed"
-msgstr "Terminé"
-
-msgid "Status"
-msgstr "Statut"
-
-msgid "Reservation start date cannot be in the past unless it is marked as completed"
-msgstr "La date de début de la réservation ne peut pas être dans le passé, sauf si elle est marquée comme terminée"
-
-msgid "End date cannot be before the start date"
-msgstr "La date de fin ne peut pas être antérieure à la date de début"
-
-msgid "Mark as Delivered"
-msgstr "Marquer comme livré"
-
-msgid "The Vehicle Marked as Delivered"
-msgstr "véhicule marqué comme livré"
-
-msgid "The Vehicle Marked as Returned"
-msgstr "véhicule marqué comme retourné"
-
-msgid "Mark as Returned"
-msgstr "Marquer comme retourné"
-
-msgid "Admin Dashboard"
-msgstr "Tableau de bord"
-
-msgid "Total Reservations"
-msgstr "Total des réservations"
-
-msgid "Available Cars"
-msgstr "Voitures disponibles"
-
-msgid "Monthly Financial Summary"
-msgstr "Résumé financier mensuel"
-
-msgid "Month"
-msgstr "Mois"
-
-msgid "Total Revenue"
-msgstr "Revenu total"
-
-msgid "Profit"
-msgstr "Profit"
-
-msgid "No financial data available."
-msgstr "Aucune donnée financière disponible."
-
-msgid "Profit and Expenses by Car"
-msgstr "Bénéfices et dépenses par voiture"
-
-msgid "Total Expense"
-msgstr "Dépenses totales"
-
-msgid "Clients with Balance Due"
-msgstr "Clients ayant un solde dû"
-
-
-msgid "Total Due"
-msgstr "Montant dû"
-
-msgid "No clients with due amounts."
-msgstr "Aucun client avec un solde dû."
-
-msgid "Actual Daily Rate"
-msgstr "Tarif journalier réel"
-
-msgid "Rental Days by Car per Month"
-msgstr "Jours de location par voiture par mois"
-
-msgid "Number Of Rental Days"
-msgstr "Nombre de jours de location"
-
-msgid "View Rental Days"
-msgstr "Voir les jours de location"
-
-msgid "Rental Days"
-msgstr "Jours de location"
-
-msgid "No rental data available."
-msgstr "Aucune donnée de location disponible"
-
-msgid "No car data available."
-msgstr "Aucune donnée de voiture disponible"
-
+#: .\rent\admin.py:311
 msgid "Time and Location Details"
 msgstr "Détails de l'heure et de l'emplacement"
 
+#: .\rent\admin.py:314
+msgid "Payment Information"
+msgstr "Informations de paiement"
+
+#: .\rent\admin.py:331
+#, fuzzy
+#| msgid "The Vehicle Marked as Delivered"
+msgid "The Vehicle Marked as Deliverd."
+msgstr "véhicule marqué comme livré"
+
+#: .\rent\admin.py:333
+#, fuzzy
+#| msgid "Mark as Delivered"
+msgid "Mark as Delivred"
+msgstr "Marquer comme livré"
+
+#: .\rent\admin.py:344
+#, fuzzy
+#| msgid "The Vehicle Marked as Returned"
+msgid "The Vehicle Marked as Returned."
+msgstr "véhicule marqué comme retourné"
+
+#: .\rent\admin.py:348
+msgid "Mark as Returned"
+msgstr "Marquer comme retourné"
+
+#: .\rent\admin.py:354
+msgid "Download Receipt"
+msgstr "Télécharger le reçu"
+
+#: .\rent\admin.py:355
+msgid "No PDF Available"
+msgstr "Aucun PDF disponible"
+
+#: .\rent\admin.py:356 .\rent\models.py:256
+msgid "PDF Receipt"
+msgstr "Reçu PDF"
+
+#: .\rent\admin.py:404
+msgid "Expenditure Information"
+msgstr "Informations sur les dépenses"
+
+#: .\rent\apps.py:7
+msgid "rent"
+msgstr "reservation"
+
+#: .\rent\models.py:15 .\rent\models.py:121
+msgid "Name"
+msgstr "Nom"
+
+#: .\rent\models.py:17 .\rent\models.py:123
+msgid "Phone Number"
+msgstr "Numéro de téléphone"
+
+#: .\rent\models.py:20 .\rent\models.py:126
+msgid "Enter a valid phone number."
+msgstr ""
+
+#: .\rent\models.py:23 .\rent\models.py:129
+msgid "Address"
+msgstr "Adresse"
+
+#: .\rent\models.py:24 .\rent\models.py:130
+msgid "Date of Birth"
+msgstr "Date de naissance"
+
+#: .\rent\models.py:26 .\rent\models.py:132
+msgid "Identity Card Number"
+msgstr "Numéro de la carte d'identité"
+
+#: .\rent\models.py:29 .\rent\models.py:135
+msgid "Enter a valid ID card number."
+msgstr ""
+
+#: .\rent\models.py:32 .\rent\models.py:138
+msgid "Driver's License Number"
+msgstr "Numéro du permis de conduire"
+
+#: .\rent\models.py:35 .\rent\models.py:141
+#, fuzzy
+#| msgid "Driver's License Number"
+msgid "Enter a valid driver’s license number."
+msgstr "Numéro du permis de conduire"
+
+#: .\rent\models.py:38 .\rent\models.py:151
+#, fuzzy
+#| msgid "Identity Card"
+msgid "Identity Card Front"
+msgstr "Carte d'identité"
+
+#: .\rent\models.py:41 .\rent\models.py:154
+#, fuzzy
+#| msgid "Identity Card"
+msgid "Identity Card Back"
+msgstr "Carte d'identité"
+
+#: .\rent\models.py:44 .\rent\models.py:157
+#, fuzzy
+#| msgid "Driver License Image"
+msgid "Driver License Front"
+msgstr "Image du permis de conduire"
+
+#: .\rent\models.py:47 .\rent\models.py:160
+#, fuzzy
+#| msgid "Driver License Image"
+msgid "Driver License Back"
+msgstr "Image du permis de conduire"
+
+#: .\rent\models.py:50 .\rent\models.py:163
+msgid "Passport Image"
+msgstr "Image du passeport"
+
+#: .\rent\models.py:60 .\rent\models.py:188
+msgid "Age"
+msgstr "Âge"
+
+#: .\rent\models.py:62
+msgid "Driver"
+msgstr "Chauffeur"
+
+#: .\rent\models.py:63 .\rent\models.py:227
+msgid "Drivers"
+msgstr "Chauffeurs"
+
+#: .\rent\models.py:69
+msgid "Manual"
+msgstr "Manuelle"
+
+#: .\rent\models.py:70
+msgid "Automatic"
+msgstr "Automatique"
+
+#: .\rent\models.py:71
+msgid "Semi-Automatic"
+msgstr "Semi-Automatique"
+
+#: .\rent\models.py:75
+msgid "Petrol"
+msgstr "Essence"
+
+#: .\rent\models.py:76
+msgid "Diesel"
+msgstr "Diesel"
+
+#: .\rent\models.py:77
+msgid "Electric"
+msgstr "Électrique"
+
+#: .\rent\models.py:78
+msgid "Hybrid"
+msgstr "Hybride"
+
+#: .\rent\models.py:80
+msgid "Brand"
+msgstr "Marque"
+
+#: .\rent\models.py:81
+msgid "Model"
+msgstr "Modèle"
+
+#: .\rent\models.py:82
+msgid "Registration Plate"
+msgstr "Plaque d’immatriculation"
+
+#: .\rent\models.py:83
+msgid "Image"
+msgstr "Photo"
+
+#: .\rent\models.py:84
+msgid "Year"
+msgstr "Année"
+
+#: .\rent\models.py:85
+msgid "Transmission"
+msgstr "Boîte de vitesses"
+
+#: .\rent\models.py:86
+msgid "Fuel Type"
+msgstr "Type de carburant"
+
+#: .\rent\models.py:87
+msgid "Number of passengers"
+msgstr "Nombre de passagers"
+
+#: .\rent\models.py:88
+msgid "Daily Rate"
+msgstr "Tarif journalier"
+
+#: .\rent\models.py:89 .\rent\views.py:115
+msgid "Total Expenditure"
+msgstr "Total des dépenses"
+
+#: .\rent\models.py:90
+msgid "Available"
+msgstr "Disponible"
+
+#: .\rent\models.py:93 .\rent\models.py:221 .\rent\models.py:369
+#: .\rent\views.py:128 .\rent\views.py:177
+msgid "Car"
+msgstr "Voiture"
+
+#: .\rent\models.py:144
+msgid "Total Amount Paid"
+msgstr "Montant total payé"
+
+#: .\rent\models.py:147
+msgid "Total Amount Due"
+msgstr "Montant total dû"
+
+#: .\rent\models.py:167
+msgid "Client Rating"
+msgstr "Évaluation du client"
+
+#: .\rent\models.py:170
+msgid "Rating of the client (1 to 5)"
+msgstr "Évaluation du client (1 à 5)"
+
+#: .\rent\models.py:174 .\rent\models.py:224 .\rent\views.py:107
+msgid "Client"
+msgstr "Client"
+
+#: .\rent\models.py:205 .\rent\models.py:207 .\rent\models.py:208
 msgid "City"
 msgstr "Ville"
 
+#: .\rent\models.py:216
+msgid "Pending"
+msgstr "En attente"
+
+#: .\rent\models.py:217
+msgid "In Progress"
+msgstr "En cours"
+
+#: .\rent\models.py:218
+msgid "Completed"
+msgstr "Terminé"
+
+#: .\rent\models.py:229 .\templates\admin\edit_inline\tabular_custom.html:5
+msgid "Start Date"
+msgstr "Date de début"
+
+#: .\rent\models.py:230 .\templates\admin\edit_inline\tabular_custom.html:6
+msgid "End Date"
+msgstr "Date de fin"
+
+#: .\rent\models.py:231
+msgid "Pickup Time"
+msgstr "Heure de prise en charge"
+
+#: .\rent\models.py:232
+msgid "Dropoff Time"
+msgstr "Heure de retour"
+
+#: .\rent\models.py:233
 msgid "Pick up Adresse"
 msgstr "Adresse de prise en charge"
 
+#: .\rent\models.py:234
 msgid "Drop off Adresse"
 msgstr "Adresse de dépôt"
 
-msgid "Control Panel"
-msgstr "Tablaux de Board"
+#: .\rent\models.py:235
+msgid "Status"
+msgstr "Statut"
+
+#: .\rent\models.py:236
+msgid "Actual Daily Rate"
+msgstr "Tarif journalier réel"
+
+#: .\rent\models.py:238
+msgid "Total Cost"
+msgstr "Coût total"
+
+#: .\rent\models.py:242
+msgid "Paid"
+msgstr "Payé"
+
+#: .\rent\models.py:243
+msgid "Partially Paid"
+msgstr "Partiellement payé"
+
+#: .\rent\models.py:244
+msgid "Unpaid"
+msgstr "Non payé"
+
+#: .\rent\models.py:248
+msgid "Payment Status"
+msgstr "Statut du paiement"
+
+#: .\rent\models.py:252 .\templates\admin\edit_inline\tabular_custom.html:7
+msgid "Total Paid"
+msgstr "Total payé"
+
+#: .\rent\models.py:259 .\rent\models.py:393
+msgid "Reservation"
+msgstr "Réservation"
+
+#: .\rent\models.py:270
+#, fuzzy
+#| msgid ""
+#| "Reservation start date cannot be in the past unless it is marked as "
+#| "completed"
+msgid ""
+"Reservation start date cannot be in the past unless it is marked as "
+"completed."
+msgstr ""
+"La date de début de la réservation ne peut pas être dans le passé, sauf si "
+"elle est marquée comme terminée"
+
+#: .\rent\models.py:274
+#, fuzzy
+#| msgid "End date cannot be before the start date"
+msgid "End date cannot be before the start date."
+msgstr "La date de fin ne peut pas être antérieure à la date de début"
+
+#: .\rent\models.py:287
+msgid "This car is already reserved for the selected dates."
+msgstr "Cette voiture est déjà réservée pour les dates sélectionnées."
+
+#: .\rent\models.py:371
+msgid "Description"
+msgstr "Description"
+
+#: .\rent\models.py:372
+msgid "Cost"
+msgstr "Coût"
+
+#: .\rent\models.py:373 .\rent\models.py:430
+msgid "Date"
+msgstr "Date"
+
+#: .\rent\models.py:376
+msgid "Car Expenditure"
+msgstr "Dépense liée à la voiture"
+
+#: .\rent\models.py:395
+msgid "Amount Paid"
+msgstr "Montant payé"
+
+#: .\rent\models.py:396
+msgid "Payment Date"
+msgstr "Date de paiement"
+
+#: .\rent\models.py:398
+msgid "Payment"
+msgstr "Paiement"
+
+#: .\rent\models.py:428 .\rent\models.py:438
+msgid "Type"
+msgstr "Type"
+
+#: .\rent\models.py:429
+msgid "Amount"
+msgstr "Montant"
+
+#: .\rent\models.py:432
+msgid "Business Expenditure"
+msgstr "Dépense de l'entreprise"
+
+#: .\rent\models.py:440
+#, fuzzy
+#| msgid "Expenditure Type"
+msgid "Expenditures Type"
+msgstr "Type de dépense"
+
+#: .\rent\models.py:441
+#, fuzzy
+#| msgid "Expenditure Types"
+msgid "Expenditures Types"
+msgstr "Types de dépenses"
+
+#: .\rent\views.py:107
+msgid "Total Due"
+msgstr "Montant dû"
+
+#: .\rent\views.py:115
+msgid "Month"
+msgstr "Mois"
+
+#: .\rent\views.py:115 .\rent\views.py:128
+msgid "Total Revenue"
+msgstr "Revenu total"
+
+#: .\rent\views.py:115 .\rent\views.py:128
+msgid "Profit"
+msgstr "Profit"
+
+#: .\rent\views.py:128
+msgid "Total Expense"
+msgstr "Dépenses totales"
+
+#: .\templates\admin\index.html:7
+msgid "Admin Dashboard"
+msgstr "Tableau de bord"
+
+#: .\templates\admin\index.html:13
+msgid "Total Reservations"
+msgstr "Total des réservations"
+
+#: .\templates\admin\index.html:17
+msgid "Available Cars"
+msgstr "Voitures disponibles"
+
+#: .\templates\admin\index.html:26
+msgid "Clients with Balance Due"
+msgstr "Clients ayant un solde dû"
+
+#: .\templates\admin\index.html:36
+msgid "Monthly Financial Summary"
+msgstr "Résumé financier mensuel"
+
+#: .\templates\admin\index.html:46
+msgid "Profit and Expenses by Car"
+msgstr "Bénéfices et dépenses par voiture"
+
+#: .\templates\admin\index.html:55
+msgid "Rental Days by Car per Month"
+msgstr "Jours de location par voiture par mois"
+
+#~ msgid "Tanger"
+#~ msgstr "Tanger"
+
+#~ msgid "%(app)s administration"
+#~ msgstr "Administration de %(app)s"
+
+#~ msgid "Identity Card Image"
+#~ msgstr "Image de la carte d'identité"
+
+#~ msgid "amount"
+#~ msgstr "Montant"
+
+#~ msgid "Yes"
+#~ msgstr "Oui"
+
+#~ msgid "No"
+#~ msgstr "Non"
+
+#~ msgid "Date of birth"
+#~ msgstr "Date de naissance"
+
+#~ msgid "Not Available"
+#~ msgstr "Non disponible"
+
+#~ msgid "No financial data available."
+#~ msgstr "Aucune donnée financière disponible."
+
+#~ msgid "No clients with due amounts."
+#~ msgstr "Aucun client avec un solde dû."
+
+#~ msgid "Number Of Rental Days"
+#~ msgstr "Nombre de jours de location"
+
+#~ msgid "View Rental Days"
+#~ msgstr "Voir les jours de location"
+
+#~ msgid "Rental Days"
+#~ msgstr "Jours de location"
+
+#~ msgid "No rental data available."
+#~ msgstr "Aucune donnée de location disponible"
+
+#~ msgid "No car data available."
+#~ msgstr "Aucune donnée de voiture disponible"
+
+msgid "No results found"
+msgstr "Aucun résultat trouvé"
+
+msgid "This page yielded into no results. Create a new item or reset your filters."
+msgstr "Cette page n'a donné aucun résultat. Créez un nouvel élément ou réinitialisez vos filtres."
+
+msgid "Type to search"
+msgstr "Tapez pour rechercher"
+
+msgid "Reset filters"
+msgstr "Réinitialiser les filtres"
+
+msgid "Filters"
+msgstr "Filtres"
+
+msgid "Light"
+msgstr "Clair"
+
+msgid "Dark"
+msgstr "Sombre"
+
+msgid "System"
+msgstr "Système"
+
+msgid "Select value"
+msgstr "Sélectionnez une valeur"
+
+msgid "Choose file to upload"
+msgstr "Choisissez un fichier à télécharger"
+msgid "Select action"
+msgstr "Sélectionner une action"
+
+msgid "Select record"
+msgstr "Sélectionner un enregistrement"
+
+msgid "Select all rows"
+msgstr "Sélectionner toutes les lignes"
+
+msgid "Run"
+msgstr "Exécuter"

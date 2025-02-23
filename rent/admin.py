@@ -86,6 +86,19 @@ class ClientAdminForm(forms.ModelForm):
         else:
                 self.fields['total_amount_paid'].widget.attrs['readonly'] = True
                 self.fields['total_amount_due'].widget.attrs['readonly'] = True
+class CarAdminForm(forms.ModelForm):
+    class Meta:
+        model = Car
+        fields = '__all__'
+
+    # Override the default widget for image fields
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        if not self.instance.pk:
+                self.fields['total_expenditure'].widget = forms.HiddenInput()
+        else:
+                self.fields['total_expenditure'].widget.attrs['readonly'] = True
 
 class ReservationForm(forms.ModelForm):
     class Meta:
@@ -211,10 +224,10 @@ class ReservationInline(admin.TabularInline):
 ### CAR ADMIN ###
 @admin.register(Car, site=admin_site)
 class CarAdmin(ModelAdmin):
+    form = CarAdminForm
     list_display = ('brand', 'model', 'plate_number', 'daily_rate', 'total_expenditure','is_available')
     list_filter = ('daily_rate', 'is_available',)  # Filter by car brand and year
     search_fields = ('plate_number', 'brand',)  # Search by plate number, brand, or model
-    readonly_fields = ('total_expenditure',)  # Prevent editing total expenditure
  #   inlines = [CarExpenditureInline, ReservationInline]  # Add expenditures inline
     actions = [custom_delete_selected]
 

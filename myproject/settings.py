@@ -30,9 +30,9 @@ TIME_ZONE = 'Africa/Casablanca'
 LANGUAGE_CODE = 'ar'
 
 LANGUAGES = [
-    ('en', _('English')),
-    ('fr', _('French')),
-    ('ar', _('Arabic')),
+    ('en', 'English'),
+    ('fr', 'Frencais'),
+    ('ar', 'العربية'),
 ]
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.

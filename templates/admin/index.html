@@ -11,11 +11,11 @@
         {% component "unfold/components/container.html" %}
             <div class="flex {% if lang_code == 'ar' %}space-x-reverse space-x-4{% else %}space-x-4{% endif %}">
                 {% component "unfold/components/card.html" with title=_("Total Reservations") %}
-                    <p class="text-2xl font-bold text-gray-800">{{ total_reservations }}</p>
+                    <p class="text-2xl font-bold text-gray-800 {% if lang_code == 'ar' %}text-right{% endif %}">{{ total_reservations }}</p>
                 {% endcomponent %}
 
                 {% component "unfold/components/card.html" with title=_("Available Cars") %}
-                    <p class="text-2xl font-bold text-gray-800">{{ available_cars }}</p>
+                    <p class="text-2xl font-bold text-gray-800 {% if lang_code == 'ar' %}text-right{% endif %}">{{ available_cars }}</p>
                 {% endcomponent %}
             </div>
         {% endcomponent %}
@@ -24,31 +24,39 @@
     <!-- Clients with Balance Due -->
     <section class="dashboard-section mb-8">
         {% component "unfold/components/card.html" with title=_("Clients with Balance Due") %}
+        <div class="table-container {% if lang_code == 'ar' %}table-rtl{% endif %}">
             {% component "unfold/components/table.html" with table=table_clients_with_due %}
             {% endcomponent %}
+        <div class="table-container {% if lang_code == 'ar' %}table-rtl{% endif %}">
         {% endcomponent %}
     </section>
 
     <!-- Monthly Financial Summary Table -->
     <section class="dashboard-section mb-8">
         {% component "unfold/components/card.html" with title=_("Monthly Financial Summary") %}
+        <div class="table-container {% if lang_code == 'ar' %}table-rtl{% endif %}">
             {% component "unfold/components/table.html" with table=table_financial_data %}
             {% endcomponent %}
+        </div>
         {% endcomponent %}
     </section>
 
     <!-- Profit and Expenses by Car -->
     <section class="dashboard-section mb-8">
         {% component "unfold/components/card.html" with title=_("Profit and Expenses by Car") %}
+        <div class="table-container {% if lang_code == 'ar' %}table-rtl{% endif %}">
             {% component "unfold/components/table.html" with table=table_car_profit_data %}
             {% endcomponent %}
+        </div>
         {% endcomponent %}
     </section>
     <!-- Car Rental Days Table -->
     <section class="dashboard-section mb-8">
         {% component "unfold/components/card.html" with title=_("Rental Days by Car per Month") %}
+        <div class="table-container {% if lang_code == 'ar' %}table-rtl{% endif %}">
             {% component "unfold/components/table.html" with table=table_car_rental_days %}
             {% endcomponent %}
+        </div>
         {% endcomponent %}
     </section>
 
