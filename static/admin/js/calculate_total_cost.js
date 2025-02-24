@@ -1,17 +1,3 @@
-// Initialize Flatpickr for timepicker with clock UI
-document.addEventListener('DOMContentLoaded', function() {
-    flatpickr('.timepicker', {
-        enableTime: true,          // Enable time selection
-        noCalendar: true,          // Hide the calendar, only show time
-        dateFormat: 'H:i',         // 24-hour time format (you can change it to 'h:i K' for 12-hour format)
-        time_24hr: true,           // Use 24-hour format
-        defaultHour: 12,           // Default hour (you can set it as needed)
-        defaultMinute: 0,          // Default minute
-        minuteIncrement: 1,        // Time increments in minutes
-        position: "top",           // Position of the time picker
-        disableMobile: false       // Disable mobile browser time pickers
-    });
-});
 (function () {
     function init() {
         if (typeof django === "undefined" || typeof django.jQuery === "undefined") {

@@ -14,6 +14,51 @@ from django.utils.translation import gettext as _
 from django.utils.formats import date_format
 
 
+from django.shortcuts import render, get_object_or_404, redirect
+from django.utils.translation import gettext_lazy as _
+from django.contrib import messages
+from .forms import RatingForm
+
+
+def rate_client(request, reservation_id):
+    """
+    Handles the rating form submission for a returned reservation.
+    """
+    reservation = get_object_or_404(Reservation, id=reservation_id)
+
+    if request.method == "POST":
+        print("DEBUG: Received POST Data:", request.POST)  # 👀 Check what is received
+
+        form = RatingForm(request.POST)
+        if form.is_valid():
+            print("DEBUG: Form is valid!")  # 👀 If this is NOT printed, the form is invalid
+            rating = int(form.cleaned_data["rating"])
+
+            # ✅ Mark reservation as returned
+            reservation.dropoff_time = now().time()
+            reservation.status = "completed"
+            reservation.car.is_available = True
+            reservation.car.save(update_fields=["is_available"])
+            reservation.save()
+
+            # ✅ Update client rating
+            client = reservation.client
+            existing_rating = client.rating or 0
+            client.rating = (existing_rating + rating) / 2
+            client.save()
+
+            messages.success(request, _("Reservation marked as returned and client rated!"))
+            return redirect("admin:rent_reservation_changelist")
+
+        else:
+            print("DEBUG: Form is INVALID! Errors:", form.errors)  # 👀 Log validation errors
+
+    else:
+        form = RatingForm(initial={"reservation_id": reservation.id})
+
+    return render(request, "admin/rating_popup.html", {"form": form, "reservation": reservation})
+
+
 
 def thank_you(request):
     return render(request, 'thank_you.html')

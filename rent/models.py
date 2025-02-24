@@ -136,9 +136,14 @@ class Car(models.Model):
 
         # Call the original delete method
         super().delete(*args, **kwargs)
+    
+
 
     def __str__(self):
-        return f"{self.plate_number} ({_('Available') if self.is_available else _('Not Available')})"
+        check_mark = "✅"  # Green check for available
+        cross_mark = "❌"  # Red X for not available
+
+        return f"{self.plate_number} {check_mark if self.is_available else cross_mark}"
 
 class Client(models.Model):
     name = models.CharField(_("Name"), max_length=20, unique=True)  # Translated
@@ -203,8 +208,7 @@ class Client(models.Model):
 
     rating = models.PositiveSmallIntegerField(
         _("Client Rating"),
-        default=0,
-        validators=[MinValueValidator(1), MaxValueValidator(5)],
+        null=True, blank=True,
         help_text=_("Rating of the client (1 to 5)"),
     )
 
@@ -263,14 +267,14 @@ class Reservation(models.Model):
     )  # Multiple drivers allowed
     start_date = models.DateField(_("Start Date"))
     end_date = models.DateField(_("End Date"))
-    pickup_time = models.TimeField(_("Pickup Time"), default=now)
-    dropoff_time = models.TimeField(_("Dropoff Time"), default=now)
+    pickup_time = models.TimeField(_("Pickup Time"),  blank=True, null=True)
+    dropoff_time = models.TimeField(_("Dropoff Time"), blank=True, null=True)
     pickup_adresse = models.ForeignKey("City", on_delete=models.CASCADE, related_name="pickup_reservations", verbose_name=_("Pick up Adresse"), null=True,blank=True)
     dropoff_adresse = models.ForeignKey("City", on_delete=models.CASCADE, related_name="dropoff_reservations", verbose_name=_("Drop off Adresse"), null=True,blank=True)
     status = models.CharField(_("Status"), max_length=20, choices=STATUS_CHOICES, default="pending")
     actual_daily_rate = models.DecimalField(_('Actual Daily Rate'), max_digits=10, decimal_places=2, blank=True, null=True)
     total_cost = models.DecimalField(
-        _("Total Cost"), max_digits=12, decimal_places=2, blank=True
+        _("Total Cost"), max_digits=12, decimal_places=2, blank=True, null=True
     )  # Calculated cost for reservation
     
     PAYMENT_STATUS_CHOICES = [

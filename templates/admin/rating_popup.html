@@ -1,0 +1,17 @@
+{% extends "admin/base_site.html" %}
+{% load i18n %}
+
+{% block content %}
+    <h2>{% trans "Rate Client for Reservation" %} #{{ reservation.id }}</h2>
+
+    <form method="post" action="">
+        {% csrf_token %}
+
+        <label for="id_rating">{% trans "Give a Rating (1-5):" %}</label>
+        <input type="number" name="rating" id="id_rating" min="1" max="5" required>
+
+        <input type="hidden" name="reservation_id" value="{{ reservation.id }}">
+
+        <button type="submit">{% trans "Submit" %}</button>
+    </form>
+{% endblock %}

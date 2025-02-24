@@ -1,18 +1,20 @@
 from django.db.models import Sum
 from django.db.models.functions import TruncMonth
 from django.contrib.admin.views.decorators import staff_member_required
-from django.shortcuts import render
 from django.urls import path
 from django.urls import reverse
+from django.shortcuts import render, redirect
 
 from django.contrib import admin
 from unfold.sites import UnfoldAdminSite
-
+from django.utils.safestring import mark_safe
 from django.contrib.auth.models import User
 from django.contrib.auth.admin import UserAdmin
 from django.utils.timezone import now
 
 from django.utils.translation import gettext_lazy as _, gettext, get_language
+from unfold.decorators import action
+from rent.forms import RatingForm
 from .views import admin_dashboard
 from .models import BusinessExpenditure, Car, City, Client, Reservation, CarExpenditure, Payment, Driver, ExpenditureType
 from django.utils.html import format_html
@@ -21,6 +23,8 @@ from django.db import transaction
 from django.template.response import TemplateResponse
 from django.http import JsonResponse
 from unfold.admin import ModelAdmin
+from .views import rate_client  # Import the view
+
 
 
 
@@ -212,25 +216,18 @@ class ReservationInline(admin.TabularInline):
     readonly_fields = ('total_cost', 'payment_status', 'total_paid')
     fields = ('total_cost', 'total_paid', 'start_date', 'end_date')  # Include all fields
     classes = ('collapse',)  # Optional: Add collapsible behavior
-'''
-class ReservationInline(admin.TabularInline):
-    model = Reservation
-    extra = 0
-    fields = ('start_date', 'end_date', 'total_paid')
-    readonly_fields = ('start_date', 'end_date', 'total_paid')
-    template = 'admin/edit_inline/tabular_custom.html'
 
-'''
 ### CAR ADMIN ###
 @admin.register(Car, site=admin_site)
 class CarAdmin(ModelAdmin):
     form = CarAdminForm
-    list_display = ('brand', 'model', 'plate_number', 'daily_rate', 'total_expenditure','is_available')
+    list_display = ('brand', 'model', 'plate_number', 'daily_rate', 'total_expenditure',"availability_status")
     list_filter = ('daily_rate', 'is_available',)  # Filter by car brand and year
     search_fields = ('plate_number', 'brand',)  # Search by plate number, brand, or model
  #   inlines = [CarExpenditureInline, ReservationInline]  # Add expenditures inline
     actions = [custom_delete_selected]
 
+    
     fieldsets = (
         (_('Car Information'), {
             'fields': ('brand', 'model', 'plate_number', 'year', 'image', 'daily_rate')
@@ -239,6 +236,12 @@ class CarAdmin(ModelAdmin):
             'fields': ('total_expenditure',)
         }),
     )
+    def availability_status(self, obj):
+        if obj.is_available:
+            return mark_safe('<span style="color: green;">✅</span>')
+        return mark_safe('<span style="color: red;">❌</span>')
+
+    availability_status.short_description = _("Available")
     def get_actions(self, request):
         # Call the parent method to get all actions
         actions = super().get_actions(request)
@@ -331,22 +334,47 @@ class ReservationAdmin(ModelAdmin):
         self.message_user(request, _("The Vehicle Marked as Deliverd."))
 
     mark_as_picked_up.short_description = _("Mark as Delivred")
-
+    def get_urls(self):
+        """
+        Add custom admin URLs (like rating popup) inside Django Admin.
+        """
+        urls = super().get_urls()
+        custom_urls = [
+            path("rate-client/<int:reservation_id>/", self.admin_site.admin_view(rate_client), name="rate-client"),
+        ]
+        return custom_urls + urls  # Custom URLs must come first
+    @action(description=_("Mark as Returned"), url_path="mark-as-returned")
     def mark_as_returned(self, request, queryset):
-        """ Admin action: Mark reservation as 'Completed' and update dropoff time. """
-        for reservation in queryset:
-            if reservation.status != "completed":
-                reservation.dropoff_time = now().time()
-                reservation.status = "completed"
-                reservation.car.is_available = True
-                reservation.car.save(update_fields=['is_available'])
-                reservation.save()
-        self.message_user(request, _("The Vehicle Marked as Returned."))
-        return JsonResponse({
-            'show_popup': True
-        })
-    mark_as_returned.short_description = _("Mark as Returned")
+        """
+        Marks reservations as completed, makes cars available, and prompts for client rating.
+        """
 
+        # **1️⃣ Ensure queryset is not empty**
+        if not queryset.exists():
+            self.message_user(request, _("No reservations selected."), level="warning")
+            return redirect("admin:rent_reservation_changelist")
+
+        # **2️⃣ Only process reservations that are not already completed**
+        reservations_to_update = queryset.exclude(status="completed")
+
+        if not reservations_to_update.exists():
+            self.message_user(request, _("All selected reservations are already completed."), level="info")
+            return redirect("admin:rent_reservation_changelist")
+
+        # **3️⃣ Show rating form only if there's one reservation**
+        if reservations_to_update.count() == 1:
+            reservation = reservations_to_update.first()
+            return redirect(reverse("admin:rate-client", args=[reservation.id]))
+
+        for reservation in reservations_to_update:
+            reservation.dropoff_time = now().time()
+            reservation.status = "completed"
+            reservation.car.is_available = True
+            reservation.car.save(update_fields=["is_available"])
+            reservation.save()
+
+        self.message_user(request, _("Selected reservations marked as returned."))
+        return redirect("admin:rent_reservation_changelist")
 
     def pdf_link(self, obj):
         """Show a link to download the PDF in the admin interface."""
