@@ -1,17 +1,89 @@
 {% extends "admin/base_site.html" %}
-{% load i18n %}
+{% load i18n unfold %}
 
 {% block content %}
-    <h2>{% trans "Rate Client for Reservation" %} #{{ reservation.id }}</h2>
+    <!-- Background Overlay -->
+    <div id="rating-modal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+        <div class="bg-white dark:bg-base-800 rounded-lg shadow-lg w-96 p-6">
+            <h2 class="text-lg font-semibold text-gray-800 dark:text-white text-center">
+                {% trans "Rate Client for Reservation" %} #{{ reservation.id }}
+            </h2>
 
-    <form method="post" action="">
-        {% csrf_token %}
+            <form id="rating-form" method="post" action="">
+                {% csrf_token %}
 
-        <label for="id_rating">{% trans "Give a Rating (1-5):" %}</label>
-        <input type="number" name="rating" id="id_rating" min="1" max="5" required>
+                <div class="my-4">
+                    <label class="block text-gray-700 dark:text-gray-300 mb-2 text-center">
+                        {% trans "Select a Rating:" %}
+                    </label>
+                    
+                    <!-- Star Rating System -->
+                    <div class="rating flex gap-2 justify-center">
+                        <input type="radio" name="rating" id="star5" value="5" required>
+                        <label for="star5" class="star">★</label>
+                        <input type="radio" name="rating" id="star4" value="4">
+                        <label for="star4" class="star">★</label>
+                        <input type="radio" name="rating" id="star3" value="3">
+                        <label for="star3" class="star">★</label>
+                        <input type="radio" name="rating" id="star2" value="2">
+                        <label for="star2" class="star">★</label>
+                        <input type="radio" name="rating" id="star1" value="1">
+                        <label for="star1" class="star">★</label>
+                    </div>
+                </div>
 
-        <input type="hidden" name="reservation_id" value="{{ reservation.id }}">
+                <input type="hidden" name="reservation_id" value="{{ reservation.id }}">
 
-        <button type="submit">{% trans "Submit" %}</button>
-    </form>
+                <div class="flex justify-center">
+                    {% component "unfold/components/button.html" with submit=1 class="bg-primary-600 hover:bg-primary-700 text-white font-semibold px-6 py-2 rounded shadow" %}
+                        {% trans "Submit Rating" %}
+                    {% endcomponent %}
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <style>
+        .rating {
+            direction: rtl; /* Right-to-left for proper star alignment */
+        }
+        .rating input {
+            display: none; /* Hide radio buttons */
+        }
+        .rating label {
+            font-size: 2rem;
+            color: #ddd;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+        .rating input:checked ~ label {
+            color: #facc15; /* Yellow for selected stars */
+        }
+        .rating label:hover,
+        .rating label:hover ~ label {
+            color: #facc15; /* Hover effect */
+        }
+
+        /* Ensure the submit button is visible and readable */
+        .bg-primary-600 {
+            background-color: #2563eb; /* Tailwind blue-600 */
+        }
+        .bg-primary-600:hover {
+            background-color: #1d4ed8; /* Tailwind blue-700 */
+        }
+        .text-white {
+            color: white;
+        }
+    </style>
+
+    <script>
+        // Ensure user selects a rating before submitting
+        document.getElementById("rating-form").addEventListener("submit", function(event) {
+            const ratingChecked = document.querySelector('input[name="rating"]:checked');
+            if (!ratingChecked) {
+                alert("{% trans 'Please select a rating before submitting.' %}");
+                event.preventDefault(); // Stop form submission
+            }
+        });
+    </script>
 {% endblock %}

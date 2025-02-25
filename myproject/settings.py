@@ -202,6 +202,7 @@ UNFOLD = {
             },
         ],
     },
+    "SHOW_VIEW_ON_SITE": True,
     "SHOW_LANGUAGES": True,
     "STYLES": [
         lambda request: static("style.css"),

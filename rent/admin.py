@@ -120,6 +120,14 @@ class ReservationForm(forms.ModelForm):
         }'''
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.fields['start_date'].widget = forms.DateInput(attrs={
+            'type': 'date',
+            'class': 'unfold-datepicker'  # Add a custom class for easier styling and JS interaction
+        })
+        self.fields['end_date'].widget = forms.DateInput(attrs={
+            'type': 'date',
+            'class': 'unfold-datepicker'  # Add a custom class for easier styling and JS interaction
+        })
         if not self.instance.pk:
                 self.fields['total_paid'].widget = forms.HiddenInput()
                 self.fields['payment_status'].widget = forms.HiddenInput()
@@ -216,12 +224,13 @@ class ReservationInline(admin.TabularInline):
     readonly_fields = ('total_cost', 'payment_status', 'total_paid')
     fields = ('total_cost', 'total_paid', 'start_date', 'end_date')  # Include all fields
     classes = ('collapse',)  # Optional: Add collapsible behavior
-
+from unfold.decorators import display
 ### CAR ADMIN ###
 @admin.register(Car, site=admin_site)
 class CarAdmin(ModelAdmin):
     form = CarAdminForm
-    list_display = ('brand', 'model', 'plate_number', 'daily_rate', 'total_expenditure',"availability_status")
+    #change_form_template = "admin/car_view.html"
+    list_display = ('brand', 'model', 'plate_number', 'total_expenditure',"availability_status")
     list_filter = ('daily_rate', 'is_available',)  # Filter by car brand and year
     search_fields = ('plate_number', 'brand',)  # Search by plate number, brand, or model
  #   inlines = [CarExpenditureInline, ReservationInline]  # Add expenditures inline
@@ -256,8 +265,7 @@ class ClientAdmin(ModelAdmin):
     class Media:
         js = ('https://code.jquery.com/jquery-3.6.0.min.js', 'admin/js/custom_admin.js',)
     form = ClientAdminForm
-    list_display = ('name', 'phone_number', 'rating', 'total_amount_paid', 'total_amount_due', 'age','show_identity_card')
-    list_editable = ('rating',) 
+    list_display = ('name', 'phone_number', 'display_rating', 'total_amount_paid', 'total_amount_due', 'age','show_identity_card')
     search_fields = ('name', 'identity_card_number')  # Search by username, email, or phone
     list_filter = ('rating',)
     actions = [custom_delete_selected]

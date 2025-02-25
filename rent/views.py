@@ -43,7 +43,7 @@ def rate_client(request, reservation_id):
 
             # ✅ Update client rating
             client = reservation.client
-            existing_rating = client.rating or 0
+            existing_rating = client.rating or 5
             client.rating = (existing_rating + rating) / 2
             client.save()
 

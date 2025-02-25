@@ -1,0 +1,66 @@
+{% extends "unfold/layouts/base.html" %}
+{% load i18n unfold %}
+
+{% block title %}
+    {{ title }}
+{% endblock %}
+
+{% block breadcrumbs %}
+    <div class="px-4 lg:px-8">
+        <div class="container mb-6 mx-auto -my-3 lg:mb-12">
+            <ul class="flex flex-wrap">
+                <li>
+                    <a href="{% url 'admin:index' %}" class="text-primary-500 hover:underline">
+                        {% trans "Home" %}
+                    </a>
+                </li>
+                <li> / </li>
+                <li>
+                    <a href="{% url 'admin:rent_car_changelist' %}" class="text-primary-500 hover:underline">
+                        {% trans "Cars" %}
+                    </a>
+                </li>
+                <li> / </li>
+                <li class="font-bold text-gray-700 dark:text-gray-300">
+                    {{ original.brand }} {{ original.model }}
+                </li>
+            </ul>
+        </div>
+    </div>
+{% endblock %}
+
+{% block content %}
+    <div class="p-6 bg-white shadow-md rounded-lg dark:bg-base-800">
+        <!-- Car Header -->
+        {% component "unfold/components/title.html" %}
+            {{ original.brand }} {{ original.model }}
+        {% endcomponent %}
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
+            <!-- Car Details -->
+            {% component "unfold/components/card.html" with title=_("Car Details") %}
+                <ul class="text-gray-700 dark:text-gray-300">
+                    <li><strong>{% trans "Brand" %}:</strong> {{ original.brand }}</li>
+                    <li><strong>{% trans "Model" %}:</strong> {{ original.model }}</li>
+                    <li><strong>{% trans "plate number" %}:</strong> {{ original.plate_number }}</li>
+                    <li><strong>{% trans "Daily Rate" %}:</strong> {{ original.daily_rate }} MAD</li>
+                    <li>
+                        <strong>{% trans "Available" %}:</strong> 
+                        {% if original.is_available %}
+                            <span class="text-green-500">{% trans "Yes" %}</span>
+                        {% else %}
+                            <span class="text-red-500">{% trans "No" %}</span>
+                        {% endif %}
+                    </li>
+                </ul>
+            {% endcomponent %}
+
+            <!-- Car Image -->
+            {% if object.image %}
+                {% component "unfold/components/card.html" with title=_("Car Image") %}
+                    <img src="{{ original.image.url }}" class="w-full rounded-md shadow">
+                {% endcomponent %}
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

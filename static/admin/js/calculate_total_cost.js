@@ -1,5 +1,7 @@
 (function () {
     function init() {
+
+
         if (typeof django === "undefined" || typeof django.jQuery === "undefined") {
             console.log("Waiting for Django's jQuery...");
             setTimeout(init, 50);

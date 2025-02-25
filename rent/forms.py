@@ -5,7 +5,7 @@ class RatingForm(forms.Form):
         min_value=1,
         max_value=5,
         required=True,
-        widget=forms.NumberInput(attrs={"class": "rating-input", "step": "1"}),
+        widget=forms.HiddenInput(),  # Hide the default input, we'll use stars
     )
     reservation_id = forms.IntegerField(widget=forms.HiddenInput())
 

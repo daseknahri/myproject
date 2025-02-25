@@ -1,5 +1,6 @@
 
 from datetime import date, time, timedelta
+from django.urls import reverse
 from django.utils.timezone import now, localtime
 from imagekit.models import ProcessedImageField
 from imagekit.processors import ResizeToFit
@@ -12,6 +13,7 @@ from django.template.loader import render_to_string
 from weasyprint import HTML
 import os
 from django.core.validators import MinValueValidator, MaxValueValidator, RegexValidator
+from django.utils.html import format_html
 
 class Driver(models.Model):
     name = models.CharField(_("Name"), max_length=20, unique=True)  # Translated
@@ -115,6 +117,8 @@ class Car(models.Model):
     class Meta:
         verbose_name = _("Car") 
         verbose_name_plural = _("Cars")
+    #def get_absolute_url(self):
+    #    return reverse("car_detail", args=[str(self.id)]) 
     def get_total_expenditure(self):
         """
         Calculate the total expenditures for this car.
@@ -216,8 +220,15 @@ class Client(models.Model):
         verbose_name = _("Client")  # Sidebar translation
         verbose_name_plural = _("Clients")
 
+    def display_rating(self):
+        """ Display stars instead of numeric rating """
+        rating = int(self.rating or 5)  # Convert rating to integer, default 0 if None
+        stars = "⭐" * rating + "☆" * (5 - rating)  # Fill stars (5-star max)
+        return format_html(stars)
+
+    display_rating.short_description = _("Client Rating")
     def __str__(self):
-        return f"{self.name} - {self.rating}"
+        return f"{self.name} - {self.display_rating()}"
     
     def age(self):
         """Calculate the client's age based on their date of birth."""
