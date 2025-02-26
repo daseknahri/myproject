@@ -403,9 +403,6 @@ class Reservation(models.Model):
             self.car.save(update_fields=['is_available'])
         super().save(*args, **kwargs)
         self.client.update_payment_info()
-        self.generate_pdf_receipt()
-        Reservation.objects.filter(pk=self.pk).update(pdf_receipt=self.pdf_receipt)
-
     
     def delete(self, *args, **kwargs):
         self.car.is_available = True

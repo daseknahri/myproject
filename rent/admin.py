@@ -3,8 +3,7 @@ from django.db.models.functions import TruncMonth
 from django.contrib.admin.views.decorators import staff_member_required
 from django.urls import path
 from django.urls import reverse
-from django.shortcuts import render, redirect
-
+from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib import admin
 from unfold.sites import UnfoldAdminSite
 from django.utils.safestring import mark_safe
@@ -21,7 +20,7 @@ from django.utils.html import format_html
 from django import forms
 from django.db import transaction
 from django.template.response import TemplateResponse
-from django.http import JsonResponse
+from django.http import HttpResponse, JsonResponse
 from unfold.admin import ModelAdmin
 from .views import rate_client  # Import the view
 
@@ -73,8 +72,6 @@ class ClientAdminForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        #self.fields['date_of_birth'].widget = forms.DateInput(attrs={'type': 'date'})
-        # Use UnfoldAdminDateInput widget for the date_of_birth field to provide a better date picker
         self.fields['date_of_birth'].widget = forms.DateInput(attrs={
             'type': 'date',
             'class': 'unfold-datepicker'  # Add a custom class for easier styling and JS interaction
@@ -307,13 +304,15 @@ class PaymentInline(admin.StackedInline):
 @admin.register(Reservation, site=admin_site)
 class ReservationAdmin(ModelAdmin):
     form = ReservationForm
-    list_display = ('pk', 'car', 'client', 'start_date', 'end_date', 'total_cost', 'total_paid', 'status', 'pdf_link')
+    list_display = ('pk', 'car', 'client', 'start_date', 'end_date', 'total_cost', 'total_paid', 'status')
     autocomplete_fields = ['drivers']
     list_filter = ('payment_status', 'start_date', 'end_date')  
     search_fields = ('car__plate_number', 'client__name')  
     #readonly_fields = ('total_cost', 'payment_status', 'total_paid', 'pdf_link')  
     #inlines = [PaymentInline]  
     actions = [custom_delete_selected, "mark_as_picked_up", "mark_as_returned"]
+    actions_row = ["pdf_linkk"]
+
     change_form_template = "admin/rent/reservation/change_form.html"
     fieldsets = (
         (_("Reservation Details"), {  # Translated Section Title
@@ -343,9 +342,6 @@ class ReservationAdmin(ModelAdmin):
 
     mark_as_picked_up.short_description = _("Mark as Delivred")
     def get_urls(self):
-        """
-        Add custom admin URLs (like rating popup) inside Django Admin.
-        """
         urls = super().get_urls()
         custom_urls = [
             path("rate-client/<int:reservation_id>/", self.admin_site.admin_view(rate_client), name="rate-client"),
@@ -353,10 +349,6 @@ class ReservationAdmin(ModelAdmin):
         return custom_urls + urls  # Custom URLs must come first
     @action(description=_("Mark as Returned"), url_path="mark-as-returned")
     def mark_as_returned(self, request, queryset):
-        """
-        Marks reservations as completed, makes cars available, and prompts for client rating.
-        """
-
         # **1️⃣ Ensure queryset is not empty**
         if not queryset.exists():
             self.message_user(request, _("No reservations selected."), level="warning")
@@ -384,17 +376,23 @@ class ReservationAdmin(ModelAdmin):
         self.message_user(request, _("Selected reservations marked as returned."))
         return redirect("admin:rent_reservation_changelist")
 
-    def pdf_link(self, obj):
-        """Show a link to download the PDF in the admin interface."""
-        if obj.pdf_receipt:
-            return format_html('<a href="/media/{}" target="_blank">{}</a>', obj.pdf_receipt, _("Download Receipt"))
-        return _("No PDF Available")
-    pdf_link.short_description = _("PDF Receipt")
+    @action(description=_("Download PDF Receipt"), url_path="download-pdf-receipt")
+    def pdf_linkk(self, request, object_id):
+        """Serve the PDF receipt for download."""
+        reservation = self.get_object(request, object_id)
+        
+        # Generate the PDF if it's not already done
+        reservation.generate_pdf_receipt()
 
-    def save_model(self, request, obj, form, change):
-        """Override save to generate the PDF when the reservation is created or updated."""
-        super().save_model(request, obj, form, change)
-        obj.generate_pdf_receipt()
+        # Open the PDF file (adjust the path if needed)
+        file_path = reservation.pdf_receipt.path
+
+        # Serve the file as HTTP response
+        with open(file_path, "rb") as f:
+            response = HttpResponse(f.read(), content_type="application/pdf")
+            response['Content-Disposition'] = f'attachment; filename={reservation.pdf_receipt.name}'
+            return response
+
 
     def get_actions(self, request):
         """Override get_actions to remove default delete and use a custom delete action."""
