@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TWINS BT CAR</title>
+    <title>TWINS T.B CAR</title>
     <link rel="stylesheet" type="text/css" href="{% static 'rent/main.css' %}">
     <link rel="icon" type="image/x-icon" href="{% static 'favicon.ico' %}">
     <!-- Correct Bootstrap 5 JS Bundle -->
@@ -19,7 +19,7 @@
 <body>
     <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="navbar" style="transition: background-color 0.3s; margin: 0px ; padding: 0px;">
         <div class="container-fluid d-flex justify-content-center">
-            <a class="dry title navbar-brand" href="#" style="font-weight: bold; font-size: 2rem; margin: 0px ; padding: 0px;">TWINS BT CAR</a>
+            <a class="dry title navbar-brand" href="#" style="font-weight: bold; font-size: 2rem; margin: 0px ; padding: 0px;">TWINS T.B CAR</a>
         </div>
     </nav>
 
@@ -36,13 +36,17 @@
         <div class="container position-relative z-index-1" style="margin-top: 100px;">
             <h1 class="display-4" style="font-weight: bold;">Bienvenue dans notre Service de Location de Voitures</h1>
             <p class="lead" style="font-weight: bold;">Choisissez la voiture idéale pour votre prochain voyage</p>
-            <div class="button-container ">
-                <a href="https://wa.me/+212661649486" target="_blank"class="button primary-button">
-                  <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp Icon" class="button-icon">
-                  Contactez-nous
+            <div class="button-container flex flex-wrap justify-center gap-4">
+                <a href="https://wa.me/+212661649486" target="_blank" class="button primary-button w-full sm:w-auto">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp Icon" class="button-icon">
+                    Contactez-nous
                 </a>
-                <a href="#cars" class="button secondary-button">Notre Collection</a>
+                <a href="#cars" class="button secondary-button w-full sm:w-auto">
+                    Notre Collection
+                </a>
             </div>
+            
+            
               
         </div>
     </section>
@@ -92,13 +96,17 @@
                         <span>{{ car.is_available }}</span>
                         </div>
                     </div>
-                    <button class="rent-button" class="btn btn-primary car-button rent-button" data-car="{{ car.name }}" data-bs-toggle="modal" data-bs-target="#carModal">Louer Maintenant</button>
-                </div>
+                        <button class="rent-button btn btn-primary car-button" 
+                            data-car="{{ car.brand }} - {{ car.model }}" 
+                            data-bs-toggle="modal" 
+                            data-bs-target="#carModal">
+                            Louer Maintenant
+                        </button>                
+                    </div>
                 {% endfor %}
             </div>
         </div>
     </section>
-      
 
     <section class="features-section">
         <div class="features-header">
@@ -211,7 +219,12 @@
                         </div>
                         <div class="mb-3">
                             <label for="city" class="form-label">VILLE</label>
-                            <input type="text" class="form-control" id="city">
+                            <select class="form-control" id="city">
+                                <option value="" selected disabled>Choisissez une ville</option>
+                                {% for city in cities %}
+                                    <option value="{{ city.name }}">{{ city.name }}</option>
+                                {% endfor %}
+                            </select>
                         </div>
                         <div class="mb-3">
                             <label for="start-date" class="form-label">Date de Début</label>
@@ -259,8 +272,9 @@
                 $('#end-date').val(startDate);
             });
 
-            $('.car-button').click(function() {
-                const carName = $(this).data('car');
+            $('.rent-button').click(function() {
+                const carName = $(this).data('car');  // Corrected
+                console.log(carName);  // Check if it prints the correct value
                 $('#car-name').val(carName);
             });
 
@@ -275,7 +289,7 @@
                     return;
                 }
 
-                const message = `I would like to reserve the ${carName} in ${city} from ${startDate} to ${endDate}.`;
+                const message = `Je souhaite réserver la ${carName} à ${city} du ${startDate} au ${endDate}.`;
 
                 const whatsappLink = `https://wa.me/+212661649486?text=${encodeURIComponent(message)}`;
                 window.open(whatsappLink, '_blank');

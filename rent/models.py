@@ -38,6 +38,7 @@ class Driver(models.Model):
         unique=True, 
         validators=[RegexValidator(r'^[A-Za-z0-9-]+$', _("Enter a valid driver’s license number."))]
     )
+    driver_license_year = models.DateField(_("License Year"), null=True, blank=True)
     identity_card_front = ProcessedImageField(
         verbose_name=_("Identity Card Front"), 
         upload_to='drivers/identity_cards/fronts/', blank=True, null=True,
@@ -78,6 +79,15 @@ class Driver(models.Model):
             )
         return None
     age.short_description = _("Age")
+    def license_age(self):
+        """Calculate the client's age based on their date of birth."""
+        if self.driver_license_year:
+            today = date.today()
+            return today.year - self.driver_license_year.year - (
+                (today.month, today.day) < (self.date_of_birth.month, self.date_of_birth.day)
+            )
+        return None
+    license_age.short_description = _("License Age")
     class Meta:
         verbose_name = _("Driver")  # Sidebar translation
         verbose_name_plural = _("Drivers")  # Sidebar translation
@@ -113,6 +123,7 @@ class Car(models.Model):
     daily_rate = models.DecimalField(_('Daily Rate') ,max_digits=10, decimal_places=2, default=300)    
     total_expenditure = models.DecimalField(_('Total Expenditure'), max_digits=12, decimal_places=2, default=0.00)
     is_available = models.BooleanField(_("Available"), default=True)
+    number_of_mile = models.DecimalField(_("mileage"), max_digits=12, decimal_places=1, default=0.0)
 
     class Meta:
         verbose_name = _("Car") 
@@ -172,6 +183,7 @@ class Client(models.Model):
         unique=True,
         validators=[RegexValidator(r'^[A-Za-z0-9-]+$', _("Enter a valid driver’s license number."))]
     )
+    driver_license_year = models.DateField(_("License Year"), null=True, blank=True)
     total_amount_paid = models.DecimalField(
         verbose_name=_("Total Amount Paid"), max_digits=12, decimal_places=2, default=0.00
     )
@@ -238,7 +250,15 @@ class Client(models.Model):
                 (today.month, today.day) < (self.date_of_birth.month, self.date_of_birth.day)
             )
         return None
-    age.short_description = _("Age")
+    def license_age(self):
+        """Calculate the client's age based on their date of birth."""
+        if self.driver_license_year:
+            today = date.today()
+            return today.year - self.driver_license_year.year - (
+                (today.month, today.day) < (self.date_of_birth.month, self.date_of_birth.day)
+            )
+        return None
+    license_age.short_description = _("License Age")
 
 
     def update_payment_info(self):
@@ -305,14 +325,17 @@ class Reservation(models.Model):
     pdf_receipt = models.FileField(
         _("PDF Receipt"), upload_to='reservations/pdfs/', blank=True, null=True
     )
+    start_milage = models.DecimalField(_("Start mileage"), max_digits=12, decimal_places=1,  blank=True, null=True)
+    end_milage = models.DecimalField(_("End mileage"), max_digits=12, decimal_places=1,  blank=True, null=True)
     class Meta:
-        verbose_name = _("Reservation")  # Sidebar translation
+        verbose_name = _("Reservation")
         verbose_name_plural = _("Reservations")
 
     @property
     def rental_days(self):
         return (self.end_date - self.start_date).days if self.start_date and self.end_date else 0
     def clean(self):
+
         today = now().date()
 
         # 🔥 1. Prevent start dates in the past (unless marking as completed)
@@ -400,7 +423,8 @@ class Reservation(models.Model):
         if self.start_date == now().date() and not old_instance:
             self.status = "in_progress"
             self.car.is_available = False
-            self.car.save(update_fields=['is_available'])
+            self.car.number_of_mile = self.start_milage
+            self.car.save(update_fields=['is_available','number_of_mile'])
         super().save(*args, **kwargs)
         self.client.update_payment_info()
     

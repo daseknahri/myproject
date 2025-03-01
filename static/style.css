@@ -26,6 +26,12 @@ html[dir="rtl"] .datetimeshortcuts a {
 }
 
 /* Force native date picker styling to be removed completely */
+label[for="id_start_date"] {
+    font-weight: bold;
+}
+label[for="id_end_date"] {
+    font-weight: bold;
+}
 label[for="id_date_of_birth"] {
     font-weight: bold;
 }

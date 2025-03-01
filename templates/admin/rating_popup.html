@@ -6,12 +6,20 @@
     <div id="rating-modal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
         <div class="bg-white dark:bg-base-800 rounded-lg shadow-lg w-96 p-6">
             <h2 class="text-lg font-semibold text-gray-800 dark:text-white text-center">
-                {% trans "Rate Client for Reservation" %} #{{ reservation.id }}
+                {% trans "Rate Client and fill mileage for Reservation" %} #{{ reservation.id }}
             </h2>
 
             <form id="rating-form" method="post" action="">
                 {% csrf_token %}
-
+                <div class="my-4">
+                    <label class="block text-gray-700 dark:text-gray-300 mb-2 text-center">
+                        {% trans "Enter mileage of return:" %}
+                    </label>
+                    <input type="number" name="number_of_milage" 
+                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none dark:bg-base-700 dark:text-white" 
+                           placeholder="{% trans 'Enter mileage in km' %}" 
+                           min="0">
+                </div>
                 <div class="my-4">
                     <label class="block text-gray-700 dark:text-gray-300 mb-2 text-center">
                         {% trans "Select a Rating:" %}
@@ -74,6 +82,106 @@
         .text-white {
             color: white;
         }
+        /* Dark Mode Enhancements */
+        .dark .bg-base-800 {
+            background-color: #1e293b; /* Darker shade for better contrast */
+        }
+
+        /* Modal Background */
+        #rating-modal {
+            backdrop-filter: blur(5px); /* Adds a nice blur effect */
+        }
+
+        /* Styled input fields */
+        input[type="number"],
+        select {
+            background-color: #f8fafc; /* Light mode */
+            color: #111827;
+            border: 1px solid #d1d5db;
+            padding: 10px;
+            border-radius: 6px;
+            width: 100%;
+            transition: all 0.3s;
+        }
+
+        /* Dark Mode Input Fields */
+        .dark input[type="number"],
+        .dark select {
+            background-color: #374151; /* Dark gray */
+            color: #f3f4f6; /* Light text */
+            border: 1px solid #4b5563;
+        }
+
+        input[type="number"]:focus,
+        select:focus {
+            outline: none;
+            border-color: #2563eb; /* Blue highlight */
+            box-shadow: 0 0 8px rgba(37, 99, 235, 0.5);
+        }
+
+        /* Star Rating System */
+        .rating {
+            direction: rtl; /* Right-to-left for proper star alignment */
+        }
+
+        .rating input {
+            display: none; /* Hide radio buttons */
+        }
+
+        .rating label {
+            font-size: 2rem;
+            color: #d1d5db; /* Light gray for unselected */
+            cursor: pointer;
+            transition: color 0.2s ease-in-out;
+        }
+
+        /* Light Mode Stars */
+        .rating input:checked ~ label {
+            color: #facc15; /* Yellow */
+        }
+
+        /* Hover Effect */
+        .rating label:hover,
+        .rating label:hover ~ label {
+            color: #facc15;
+        }
+
+        /* Dark Mode Stars */
+        .dark .rating label {
+            color: #6b7280; /* Dark gray */
+        }
+
+        .dark .rating input:checked ~ label {
+            color: #fbbf24; /* Softer yellow */
+        }
+
+        .dark .rating label:hover,
+        .dark .rating label:hover ~ label {
+            color: #fbbf24;
+        }
+
+        /* Submit Button */
+        .bg-primary-600 {
+            background-color: #2563eb; /* Tailwind blue-600 */
+            transition: all 0.3s;
+        }
+
+        .bg-primary-600:hover {
+            background-color: #1d4ed8; /* Tailwind blue-700 */
+        }
+
+        .dark .bg-primary-600 {
+            background-color: #3b82f6; /* Softer blue for dark mode */
+        }
+
+        .dark .bg-primary-600:hover {
+            background-color: #2563eb;
+        }
+
+        .text-white {
+            color: white;
+        }
+
     </style>
 
     <script>

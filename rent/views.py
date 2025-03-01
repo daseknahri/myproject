@@ -6,7 +6,7 @@ from datetime import timedelta
 from django.db.models.functions import TruncMonth
 
 from rent.helper import calculate_rental_days_for_months
-from .models import Car, Reservation, Client, Payment, BusinessExpenditure, CarExpenditure, CustomerInfo
+from .models import Car, City, Reservation, Client, Payment, BusinessExpenditure, CarExpenditure, CustomerInfo
 from django.http import JsonResponse
 from django.utils.translation import get_language
 from collections import defaultdict
@@ -33,12 +33,15 @@ def rate_client(request, reservation_id):
         if form.is_valid():
             print("DEBUG: Form is valid!")  # 👀 If this is NOT printed, the form is invalid
             rating = int(form.cleaned_data["rating"])
+            number_of_milage = int(form.cleaned_data["number_of_milage"])
 
             # ✅ Mark reservation as returned
             reservation.dropoff_time = now().time()
             reservation.status = "completed"
+            reservation.end_milage = number_of_milage
             reservation.car.is_available = True
-            reservation.car.save(update_fields=["is_available"])
+            reservation.car.number_of_mile = number_of_milage
+            reservation.car.save(update_fields=["is_available","number_of_mile"])
             reservation.save()
 
             # ✅ Update client rating
@@ -60,27 +63,10 @@ def rate_client(request, reservation_id):
 
 
 
-def thank_you(request):
-    return render(request, 'thank_you.html')
-
-
-def register(request):
-    if request.method == 'POST':
-        name = request.POST.get('name')
-        city = request.POST.get('city')
-        phone = request.POST.get('phone')
-
-        # Save data to the database
-        CustomerInfo.objects.create(name=name, city=city, phone=phone)
-
-        # Redirect to thank you page
-        return redirect('thank_you')
-
-    return render(request, 'home.html')
-
 def home(request):
+    cities = City.objects.all()
     cars = Car.objects.all()
-    return render(request, 'home.html', {'cars': cars})
+    return render(request, 'home.html', {'cars': cars, 'cities': cities})
 
 
 @staff_member_required
@@ -94,16 +80,32 @@ def admin_dashboard(request):
         end_date = reservation.end_date
         daily_rate = reservation.actual_daily_rate or reservation.car.daily_rate
 
-        while start_date < end_date:
+        # Check if the reservation is for one day
+        if start_date == end_date:
+            # If it's one day, just add one day of revenue
+            days_in_month = 1
             month = start_date.replace(day=1)
-            last_day_of_month = (month + timedelta(days=32)).replace(day=1) - timedelta(days=1)
-            days_in_month = (min(end_date, last_day_of_month) - start_date).days + 1
             monthly_revenue_data[month] += days_in_month * float(daily_rate)
-            start_date = last_day_of_month + timedelta(days=1)
+        else:
+            while start_date < end_date:
+                # Determine the month and the last day of the month
+                month = start_date.replace(day=1)
+                last_day_of_month = (month + timedelta(days=32)).replace(day=1) - timedelta(days=1)
+                
+                # Calculate the number of days in the current month (exclusive of end_date)
+                days_in_month = (min(end_date, last_day_of_month) - start_date).days
+                
+                # Add the revenue for this period
+                monthly_revenue_data[month] += days_in_month * float(daily_rate)
+                
+                # Move to the next month
+                start_date = last_day_of_month + timedelta(days=1)
 
+    # Convert to a list of dicts for better presentation
     monthly_revenue_data = [{'month': month, 'total_revenue': revenue} for month, revenue in monthly_revenue_data.items()]
     monthly_revenue_data.sort(key=lambda x: x['month'])
 
+    # Handle expenditure data
     monthly_car_expenditure_data = CarExpenditure.objects.annotate(month=TruncMonth('date')).values('month').annotate(total_expenditure=Sum('cost'))
     monthly_business_expenditure_data = BusinessExpenditure.objects.annotate(month=TruncMonth('date')).values('month').annotate(total_expenditure=Sum('amount'))
 
@@ -113,6 +115,7 @@ def admin_dashboard(request):
     for item in monthly_business_expenditure_data:
         monthly_expenditure_data[item['month']] += float(item['total_expenditure'])
 
+    # Combine revenue and expenditure data into a final financial report
     monthly_financial_data = [
         {
             'month': revenue_item['month'],
@@ -196,8 +199,8 @@ def admin_dashboard(request):
                 # Determine the last day of the current month
                 last_day_of_month = (month + timedelta(days=32)).replace(day=1) - timedelta(days=1)
                 
-                # Calculate the days in the current month
-                days_in_month = (min(end_date, last_day_of_month) - start_date).days + 1
+                # Calculate the days in the current month (exclusive of end_date)
+                days_in_month = (min(end_date, last_day_of_month) - start_date).days
                 rental_days_by_month[month] = rental_days_by_month.get(month, 0) + days_in_month
                 
                 # Move to the next month
@@ -208,6 +211,7 @@ def admin_dashboard(request):
             'car': car,
             'rental_days_by_month': rental_days_by_month,
         })
+
     all_months = set()
 
     for car_data in car_rental_days_data:
@@ -215,7 +219,8 @@ def admin_dashboard(request):
 
     # 🟢 Sort months for correct display
     all_months = sorted(all_months)
-    translated_months = [date_format(month, "F Y") for month in all_months]  
+    translated_months = [date_format(month, "F Y") for month in all_months]
+
 
     # 🟢 Structure data for Unfold Table
     table_car_rental_days = {
@@ -249,6 +254,6 @@ def get_car_daily_rate(request):
 
     try:
         car = Car.objects.get(id=car_id)
-        return JsonResponse({"daily_rate": float(car.daily_rate)})
+        return JsonResponse({"daily_rate": float(car.daily_rate),"number_of_milage": int(car.number_of_mile)})
     except Car.DoesNotExist:
         return JsonResponse({"error": "Car not found"}, status=404)

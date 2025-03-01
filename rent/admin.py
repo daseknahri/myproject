@@ -57,6 +57,10 @@ class DriverAdminForm(forms.ModelForm):
             'type': 'date',
             'class': 'unfold-datepicker'  # Add a custom class for easier styling and JS interaction
         })
+        self.fields['driver_license_year'].widget = forms.DateInput(attrs={
+            'type': 'date',
+            'class': 'unfold-datepicker'  # Add a custom class for easier styling and JS interaction
+        })
 
         self.fields['identity_card_front'].widget.attrs.update({'capture': 'camera', 'accept': 'image/*'})
         self.fields['identity_card_back'].widget.attrs.update({'capture': 'camera', 'accept': 'image/*'})
@@ -76,6 +80,10 @@ class ClientAdminForm(forms.ModelForm):
             'type': 'date',
             'class': 'unfold-datepicker'  # Add a custom class for easier styling and JS interaction
         })
+        self.fields['driver_license_year'].widget = forms.DateInput(attrs={
+            'type': 'date',
+            'class': 'unfold-datepicker'  # Add a custom class for easier styling and JS interaction
+        })
         self.fields['identity_card_front'].widget.attrs.update({'capture': 'camera', 'accept': 'image/*'})
         self.fields['identity_card_back'].widget.attrs.update({'capture': 'camera', 'accept': 'image/*'})
         self.fields['driver_license_front'].widget.attrs.update({'capture': 'camera', 'accept': 'image/*'})
@@ -87,6 +95,7 @@ class ClientAdminForm(forms.ModelForm):
         else:
                 self.fields['total_amount_paid'].widget.attrs['readonly'] = True
                 self.fields['total_amount_due'].widget.attrs['readonly'] = True
+                
 class CarAdminForm(forms.ModelForm):
     class Meta:
         model = Car
@@ -126,6 +135,7 @@ class ReservationForm(forms.ModelForm):
             'class': 'unfold-datepicker'  # Add a custom class for easier styling and JS interaction
         })
         if not self.instance.pk:
+                self.fields['end_milage'].widget = forms.HiddenInput()
                 self.fields['total_paid'].widget = forms.HiddenInput()
                 self.fields['payment_status'].widget = forms.HiddenInput()
                 self.fields['dropoff_time'].widget = forms.HiddenInput()
@@ -191,22 +201,18 @@ class DriverAdmin(ModelAdmin):
    # class Media:
     #    js = ('https://code.jquery.com/jquery-3.6.0.min.js', 'admin/js/custom_admin.js',)
     form = DriverAdminForm
-    list_display = ('name', 'phone_number', 'show_identity_card')
+    list_display = ('name', 'phone_number', 'license_age')
     search_fields = ('name', 'identity_card_number') 
     actions = [custom_delete_selected]
     fieldsets = (
         (_('Driver Information'), {
-            'fields': ('name', 'phone_number', 'address', 'date_of_birth', 'identity_card_number', 'driver_license_number')
+            'fields': ('name', 'phone_number', 'address', 'date_of_birth', 'driver_license_year', 'identity_card_number', 'driver_license_number')
         }),
         (_('documents'), {
             'fields': ('identity_card_front', 'identity_card_back', 'driver_license_front', 'driver_license_back', 'passport_image')
         }),
     )
-    def show_identity_card(self, obj):
-        if obj.identity_card_front:
-            return format_html('<img src="{}" width="50" height="50" />', obj.identity_card_front.url)
-        return _("No Image")
-    show_identity_card.short_description = _("Identity Card")
+
 
 ### INLINE FOR EXPENDITURES IN CARS ###
 class CarExpenditureInline(admin.TabularInline):
@@ -227,7 +233,7 @@ from unfold.decorators import display
 class CarAdmin(ModelAdmin):
     form = CarAdminForm
     #change_form_template = "admin/car_view.html"
-    list_display = ('brand', 'model', 'plate_number', 'total_expenditure',"availability_status")
+    list_display = ('brand', 'model', 'plate_number', 'number_of_mile', 'total_expenditure',"availability_status")
     list_filter = ('daily_rate', 'is_available',)  # Filter by car brand and year
     search_fields = ('plate_number', 'brand',)  # Search by plate number, brand, or model
  #   inlines = [CarExpenditureInline, ReservationInline]  # Add expenditures inline
@@ -236,7 +242,7 @@ class CarAdmin(ModelAdmin):
     
     fieldsets = (
         (_('Car Information'), {
-            'fields': ('brand', 'model', 'plate_number', 'year', 'image', 'daily_rate')
+            'fields': ('brand', 'model', 'plate_number', 'year', 'image', 'daily_rate', 'number_of_mile')
         }),
         (_('Expenditure'), {
             'fields': ('total_expenditure',)
@@ -262,13 +268,13 @@ class ClientAdmin(ModelAdmin):
     class Media:
         js = ('https://code.jquery.com/jquery-3.6.0.min.js', 'admin/js/custom_admin.js',)
     form = ClientAdminForm
-    list_display = ('name', 'phone_number', 'display_rating', 'total_amount_paid', 'total_amount_due', 'age','show_identity_card')
+    list_display = ('name', 'phone_number', 'display_rating', 'total_amount_paid', 'total_amount_due', 'age','license_age')
     search_fields = ('name', 'identity_card_number')  # Search by username, email, or phone
     list_filter = ('rating',)
     actions = [custom_delete_selected]
     fieldsets = (
         (_('Client Information'), {
-            'fields': ('name', 'phone_number', 'address', 'date_of_birth', 'identity_card_number', 'driver_license_number')
+            'fields': ('name', 'phone_number', 'address', 'date_of_birth', 'driver_license_year', 'identity_card_number', 'driver_license_number')
         }),
         (_('documents'), {
             'fields': ('identity_card_front', 'identity_card_back', 'driver_license_front', 'driver_license_back', 'passport_image')
@@ -277,11 +283,6 @@ class ClientAdmin(ModelAdmin):
             'fields': ('total_amount_paid', 'total_amount_due')
         }),
     )
-    def show_identity_card(self, obj):
-        if obj.identity_card_front:
-            return format_html('<img src="{}" width="50" height="50" />', obj.identity_card_front.url)
-        return _("No Image")
-    show_identity_card.short_description = _("Identity Card")
 
     def get_actions(self, request):
         # Call the parent method to get all actions
@@ -305,7 +306,7 @@ class PaymentInline(admin.StackedInline):
 class ReservationAdmin(ModelAdmin):
     form = ReservationForm
     list_display = ('pk', 'car', 'client', 'start_date', 'end_date', 'total_cost', 'total_paid', 'status')
-    autocomplete_fields = ['drivers']
+    autocomplete_fields = ['drivers', 'client']
     list_filter = ('payment_status', 'start_date', 'end_date')  
     search_fields = ('car__plate_number', 'client__name')  
     #readonly_fields = ('total_cost', 'payment_status', 'total_paid', 'pdf_link')  
@@ -319,7 +320,7 @@ class ReservationAdmin(ModelAdmin):
             'fields': ('car', 'client', 'drivers', 'actual_daily_rate')
         }),
         (_("Time and Location Details"), {  # Translated Section Title
-            'fields': ('pickup_adresse' , 'dropoff_adresse', 'start_date', 'pickup_time','end_date', 'dropoff_time')
+            'fields': ('start_milage', 'end_milage', 'pickup_adresse' , 'dropoff_adresse', 'start_date', 'pickup_time','end_date', 'dropoff_time')
         }),
         (_("Payment Information"), {  # Translated Section Title
             'fields': ('total_paid', 'total_cost', 'payment_status')
@@ -335,7 +336,8 @@ class ReservationAdmin(ModelAdmin):
                 reservation.pickup_time = now().time()
                 reservation.status = "in_progress"
                 reservation.car.is_available = False
-                reservation.car.save(update_fields=['is_available'])
+                reservation.car.number_of_mile = reservation.start_milage
+                reservation.car.save(update_fields=['is_available','number_of_mile'])
                 reservation.save()
 
         self.message_user(request, _("The Vehicle Marked as Deliverd."))

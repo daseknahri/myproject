@@ -21,12 +21,16 @@
                     dataType: "json",
                     success: function (response) {
                         if (response.daily_rate) {
+                            var numberOfMilage = parseFloat(response.number_of_milage);
                             var carDailyRate = parseFloat(response.daily_rate);
-                            console.log("Car daily rate fetched:", carDailyRate);
+                            console.log("Car daily rate fetched:", carDailyRate, numberOfMilage);
 
                             // ✅ Set the actual daily rate (user can still change it manually)
                             if ($("#id_actual_daily_rate").val() === "") {
                                 $("#id_actual_daily_rate").val(carDailyRate.toFixed(2));
+                            }
+                            if ($("#id_start_milage").val() === "") {
+                                $("#id_start_milage").val(numberOfMilage.toFixed(1));
                             }
 
                             if (callback) callback(); // Trigger total cost recalculation
